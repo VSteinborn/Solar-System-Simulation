@@ -1,0 +1,124 @@
+"""
+
+Particle3D
+/////////////////
+
+By: Tomasz Andrzejewski and Victor Steinborn
+
+
+JH Computer Moddeling
+*****************
+Current assignment: 
+    Project A: Solar System
+
+Adapted from: 
+    Excersise 3 
+-----------------
+
+This file contains the Particle3D class.
+The instances of this class are representations of classical point like particles.
+Some methods of this class give expressoins that can be used to  aproximate their interactions and dynamics,
+using time integration. Other methods can be used to create particlle instances from files, or give information
+on some of their various physical properties.
+
+Assumptions and Conventions:
+-It is assumed all numerical values that are passed though this class are floats.
+-Particle3D object instances may be refered to as "particles".
+-A single Particle3D object instance may be refered to as a "particle".
+-We will be using a cartesian representation to discribe the vectors asociated with the particles.
+
+Excersise 3:
+    26.10.2016
+
+Edited for Solar System Simulation:
+    8.02.2017
+"""
+
+#Imports
+#----------------
+import math
+import numpy as np
+
+#Particle3D Class
+#----------------
+class Particle3D(object):
+    
+    # The _init_() command initializes a Particle3D instance
+    # The particle will have a:
+    # string label, a float mass, a 1x3 position array (vector) and a 1x3 velocity array.
+    def __init__(self, label, mass, position, velocity):
+        self.label = label
+        self.mass = mass
+        self.position = position
+        self.velocity = velocity
+
+    # The _str_() gives information on a particle's posion.
+    # Returns: a string containing the particle's label and its position array.
+    def __str__(self):
+        return "label = " + str(self.label) + ", position = " + str(self.position)
+    
+    #Instance Methods
+    #************************
+
+    # kineticEnergy
+    # Returns: The classical kinetic energy of a Paricle3D object, as a float.
+    def kineticEnergy(self):
+        return 0.5*self.mass*(self.velocity[0]**2 + self.velocity[1]**2 + self.velocity[2]**2)
+
+    # Time Integration Methods
+    #-------------------------
+
+    # Updates the velocity of the particle using the Velocity Verlet method
+    # Arguments- Floats: dt; 1x3 Arrays: force, new_force
+    def leapVelocity(self, dt, force, new_force):
+        self.velocity = self.velocity + 0.5*dt*((force+new_force)/(self.mass))
+  
+    # Updates the position of the particle to second order using the Velocity Verlet method.
+    # Arguments- Floats: dt; 1x3 Arrays: force 
+    def leapPos2nd(self, dt, force):
+       self.position = self.position + dt*self.velocity + 0.5*dt**2*force/self.mass
+
+    # Static Methods
+    #**************************
+
+    # Returns the vector position of a particle (p1)  with respect to another particle (p2).
+    #'wrt' stands for 'with respect to'
+    # Arguments- Particle3D objects: p1, p2
+    @staticmethod
+    def vector_position_wrt(p1,p2):
+       return np.array([p1.position[0] - p2.position[0],p1.position[1] - p2.position[1], p1.position[2] - p2.position[2]])
+
+    # Returns the magnitude of the vector separation between two particles (p1 and p2)
+    # Arguments- Particle3D objects: p1, p2
+    @staticmethod
+    def separation(p1,p2):
+        vecposition = Particle3D.vector_position_wrt(p1,p2)
+        return  math.sqrt(vecposition[0]**2+vecposition[1]**2+vecposition[2]**2)
+
+    # Returns the gravitational potential energy arising from the gravitational interaction between
+    # two particles (p1 and p2)
+    # Arguments- Particle3D objects: p1, p2; floats: G
+    @staticmethod
+    def potentialEnergy(p1,p2,G):
+        return -G*p1.mass*p2.mass/Particle3D.separation(p1,p2)**2
+
+    # Returns the gravitational force on a paricle (p1) due to another particle (p2)
+    # Caution: p1 and p2 must be at different spatial posions, or this method will divide by zero.
+    # Arguments- Particle3D objects: p1, p2; floats: G
+    @staticmethod
+    def forceVector(p1,p2,G):
+        return (G*p1.mass*p2.mass/Particle3D.separation(p1,p2)**3)*Particle3D.vector_position_wrt(p1,p2)
+
+    # Static method to create a particle from a file entry.
+    # It takes a file handle as argument and returns a Particle 3D object
+    # The file should be formatted in the following way:
+    # label mass x1 x2 x3 v1 v2 v3
+    @staticmethod
+    def from_file(file_handle):
+        #Takes next line of file_handle
+        line = file_handle.readline()
+        components = line.split()
+        # We will create vectors that will represent the particle's position and velocity.
+        position = np.array([float(components[2]), float(components[3]),float(components[4])])
+        velocity = np.array([float(components[5]), float(components[6]),float(components[7])])
+        return Particle3D(float(components[0]), components[1], position, velocity)
