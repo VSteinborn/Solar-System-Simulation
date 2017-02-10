@@ -1,21 +1,72 @@
 """
-
 Solar System Simulation
 ////////////////////////
 
 By: Tomasz Andrzejewski and Victor Steinborn
+Matriculation numbers:
+Victor Steinborn: ***REMOVED***
+Tomasz Andrzejewski: ***REMOVED***
 
 
 JH Computer Moddeling
 *****************
-Assignment: 
+Assignment:
     Project A: Solar System
 -----------------
+Log:
+    10.02.2017
+-VS: Created file
 
 This file contains the main script that is used to simulate the Solar System, using Velocity Verlet time integration techniques.
 
 
-Log:
-    10.02.2017
--VS: Created file 
+This file contains the main program that simulates the evolution of the system consisting of an arbitrary number of particles using the velocity Verlet time integration
+algorithm, as function of time in an external potential,
+with given initial conditions.
+
+To run the program, names of 4 output files must be written to the command line.
+These 4 output files hold respectively data for:
+trajectory
+energy
+apoapsides and periapsides output extremaCheck() method.
+orbital period lengths periodCalculations() method
+
+comments for Victor:
+I think when we write short comments starting with # we should be more concise, e.g. Read name of output file from command line
+instead of Reads the name of the output file...
 """
+#imports
+import sys
+import math
+import numpy as np
+import matplotlib.pyplot as pyplot
+from Particle3D import Particle3D
+
+# Read name of 4 output files from command line: trajectory, energy, extrema and periods
+if len(sys.argv) != 5:
+    print    "Wrong number of arguments."
+    print    "Usage: " + sys.argv[0] + " <trajectory output file>" + " <energy output file>" + " <extrema output file>" + " <periods output file>"
+    quit()
+else:
+    outfileName1 = sys.argv[1]
+    outfileName2 = sys.argv[2]
+    outfileName3 = sys.argv[3]
+    outfileName4 = sys.argv[4]
+# Open output file for writing
+outfile1 = open(outfileName1, "w")
+outfile2 = open(outfileName2, "w")
+outfile3 = open(outfileName3, "w")
+outfile4 = open(outfileName4, "w")
+
+# Attach file handle to input file
+file_handle = open("particles.txt", "r")
+# Return number of lines in the input file
+# Alternatively, len(file_handle.readlines())
+num_lines = sum(1 for line in file_handle)
+# Set up data lists
+particleList = [particles]
+# Read the particle data for the orbiting particle from file
+
+for i in range(num_lines)
+    pi = Particle3D.from_file(file_handle)
+    particleList.append()
