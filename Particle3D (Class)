@@ -17,17 +17,17 @@ Adapted from:
 
 This file contains the Particle3D class.
 The instances of this class are representations of classical point like particles.
-Some methods of this class give expressoins that can be used to  aproximate their interactions and dynamics,
-using time integration. Other methods can be used to create particlle instances from files, or give information
+Some methods of this class give expressions that can be used to  aproximate their interactions and dynamics,
+using time integration. Other methods can be used to create particle instances from files, or give information
 on some of their various physical properties.
 
 Assumptions and Conventions:
 -It is assumed all numerical values that are passed though this class are floats.
 -Particle3D object instances may be refered to as "particles".
 -A single Particle3D object instance may be refered to as a "particle".
--We will be using a cartesian representation to discribe the vectors asociated with the particles.
+-We will be using a cartesian representation to describe the vectors associated with the particles.
 
-Excersise 3:
+Exercise 3:
     26.10.2016
 
 Edited for Solar System Simulation:
@@ -52,7 +52,7 @@ class Particle3D(object):
         self.position = position
         self.velocity = velocity
 
-    # The _str_() gives information on a particle's posion.
+    # The _str_() gives information on a particle's position.
     # Returns: a string containing the particle's label and its position array.
     def __str__(self):
         return "label = " + str(self.label) + ", position = " + str(self.position)
@@ -61,7 +61,7 @@ class Particle3D(object):
     #************************
 
     # kineticEnergy
-    # Returns: The classical kinetic energy of a Paricle3D object, as a float.
+    # Returns: The classical kinetic energy of a Particle3D object, as a float.
     def kineticEnergy(self):
         return 0.5*self.mass*(self.velocity[0]**2 + self.velocity[1]**2 + self.velocity[2]**2)
 
@@ -97,7 +97,7 @@ class Particle3D(object):
 
     # Returns the gravitational potential energy arising from the gravitational interaction between
     # two particles (p1 and p2)
-    # Caution: p1 and p2 must be at different spatial posions, or this method will divide by zero.
+    # Caution: p1 and p2 must be at different spatial positions, or this method will divide by zero.
     # Arguments- Particle3D objects: p1, p2; floats: G
     @staticmethod
     def potentialEnergy(p1,p2,G):
