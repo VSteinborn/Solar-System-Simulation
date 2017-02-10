@@ -1,0 +1,21 @@
+"""
+
+Solar System Simulation
+////////////////////////
+
+By: Tomasz Andrzejewski and Victor Steinborn
+
+
+JH Computer Moddeling
+*****************
+Assignment: 
+    Project A: Solar System
+-----------------
+
+This file contains the main script that is used to simulate the Solar System, using Velocity Verlet time integration techniques.
+
+
+Log:
+    10.02.2017
+-VS: Created file 
+"""
