@@ -97,6 +97,7 @@ class Particle3D(object):
 
     # Returns the gravitational potential energy arising from the gravitational interaction between
     # two particles (p1 and p2)
+    # Caution: p1 and p2 must be at different spatial posions, or this method will divide by zero.
     # Arguments- Particle3D objects: p1, p2; floats: G
     @staticmethod
     def potentialEnergy(p1,p2,G):
