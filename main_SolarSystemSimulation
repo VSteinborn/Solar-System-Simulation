@@ -124,4 +124,9 @@ def leapVelocityParticles(particleList):
         particleList[i].leapVelocity(dt, forcesList[i])
 
 EValue.append(total_energy) 
+
+#Leap Position Method
+def leapPositionParticles(particleList, forcesList[i], dt):
+    for i in range(len(particleList)):
+        particleList[i].leapPosition(dt, forcesList[i])
     
