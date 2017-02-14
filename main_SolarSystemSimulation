@@ -55,7 +55,7 @@ import sys
 import math
 import numpy as np
 import matplotlib.pyplot as pyplot
-from Particle3D import Particle3D
+from Particle3D import Particle3D as P3D
 
 
 # User Input and Program Execution
@@ -84,12 +84,15 @@ outfile4 = open(outfileName4, "w")
 file_handle = open("particles.txt", "r")
 # Return number of lines in the input file
 # Alternatively, len(file_handle.readlines())
-num_lines = sum(1 for line in file_handle)
-# Set up data lists
-particleList = [particles]
-# Read the particle data for the orbiting particle from file
+num_lines = len(file_handle.readlines())
+# sum(1 for line in file_handle)
 
-with open("particles.txt", "r") as file_handle
-    for line in file_handle
-        pi = Particle3D.from_file(file_handle)
-        particleList.append()
+particleNumber = num_lines
+# Set up data lists
+
+particleList = []
+ 
+# Read the particle data for the orbiting particle from file
+with open("particles.txt", "r") as file_handle:
+    for i in range(num_lines):
+        particleList = particleList + [P3D.from_file(file_handle)]
