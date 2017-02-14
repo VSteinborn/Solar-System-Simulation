@@ -117,9 +117,9 @@ def totalForceVector(particleList):
                 total_force =  total_force + P3D.force_vector(particleList[i],particleList[j],G)
         forcesList.append(total_force)
     return forcesList
-
+    
 # Updates the velocity for all particles in a list for a given timestep and force
-def leapVelocityParticles(particleList):
+def leapVelocityParticles(particleList, forcesList, dt):
     for i in range(len(particleList)):
         particleList[i].leapVelocity(dt, forcesList[i])
 
