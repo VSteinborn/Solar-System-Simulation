@@ -10,13 +10,15 @@ Tomasz Andrzejewski: ***REMOVED***
 
 JH Computer Moddeling
 *****************
+
 Assignment:
     Project A: Solar System
------------------
+    
+*****************
 Log:
     10.02.2017
 -VS: Created file
-
+-----------------
 This file contains the main script that is used to simulate the Solar System, using Velocity Verlet time integration techniques.
 
 
@@ -31,16 +33,33 @@ energy
 apoapsides and periapsides output extremaCheck() method.
 orbital period lengths periodCalculations() method
 
+Current Assumptoins:
+-----------------
+-The distance between two bodies will never be less than or equal to the sum of their radii. (point particle treatment)
+-The orbital period is the amount of time it takes for the particle to complete an orbit about the central particle.
+
 comments for Victor:
-I think when we write short comments starting with # we should be more concise, e.g. Read name of output file from command line
+-----------------
+-I think when we write short comments starting with # we should be more concise, e.g. Read name of output file from command line
 instead of Reads the name of the output file...
+
+Comments for Tomasz:
+-----------------
+-Ok, but the comments should also be more readable to the eye, in terms of formatting.
 """
-#imports
+
+# Imports
+# ---------------
+
 import sys
 import math
 import numpy as np
 import matplotlib.pyplot as pyplot
 from Particle3D import Particle3D
+
+
+# User Input and Program Execution
+# ---------------
 
 # Read name of 4 output files from command line: trajectory, energy, extrema and periods
 if len(sys.argv) != 5:
@@ -57,6 +76,9 @@ outfile1 = open(outfileName1, "w")
 outfile2 = open(outfileName2, "w")
 outfile3 = open(outfileName3, "w")
 outfile4 = open(outfileName4, "w")
+
+# Reading Input Files and Initializing Particles
+# ---------------
 
 # Attach file handle to input file
 file_handle = open("particles.txt", "r")
