@@ -129,4 +129,4 @@ class Particle3D(object):
         # We will create vectors that will represent the particle's position and velocity.
         position = np.array([float(components[2]), float(components[3]),float(components[4])])
         velocity = np.array([float(components[5]), float(components[6]),float(components[7])])
-        return Particle3D(float(components[0]), components[1], position, velocity)
+        return Particle3D(components[0], float(components[1]), position, velocity)
