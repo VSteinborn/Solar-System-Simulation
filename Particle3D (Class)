@@ -68,19 +68,22 @@ class Particle3D(object):
     # Time Integration Methods
     #-------------------------
 
+    # leapVelocity
     # Updates the velocity of the particle using the Velocity Verlet method
     # Arguments- Floats: dt; 1x3 Arrays: force, new_force
     def leapVelocity(self, dt, force, new_force):
         self.velocity = self.velocity + 0.5*dt*((force+new_force)/(self.mass))
-  
+    
+    # leapPosition
     # Updates the position of the particle to second order using the Velocity Verlet method.
     # Arguments- Floats: dt; 1x3 Arrays: force 
-    def leapPos2nd(self, dt, force):
+    def leapPosition(self, dt, force):
        self.position = self.position + dt*self.velocity + 0.5*dt**2*force/self.mass
 
     # Static Methods
     #**************************
 
+    # vector_position_wrt
     # Returns the vector position of a particle (p1)  with respect to another particle (p2).
     #'wrt' stands for 'with respect to'
     # Arguments- Particle3D objects: p1, p2
@@ -88,6 +91,7 @@ class Particle3D(object):
     def vector_position_wrt(p1,p2):
        return np.array([p1.position[0] - p2.position[0],p1.position[1] - p2.position[1], p1.position[2] - p2.position[2]])
 
+    # separation
     # Returns the magnitude of the vector separation between two particles (p1 and p2)
     # Arguments- Particle3D objects: p1, p2
     @staticmethod
@@ -95,21 +99,24 @@ class Particle3D(object):
         vecposition = Particle3D.vector_position_wrt(p1,p2)
         return  math.sqrt(vecposition[0]**2+vecposition[1]**2+vecposition[2]**2)
 
+    # potential_energy
     # Returns the gravitational potential energy arising from the gravitational interaction between
     # two particles (p1 and p2)
     # Caution: p1 and p2 must be at different spatial positions, or this method will divide by zero.
     # Arguments- Particle3D objects: p1, p2; floats: G
     @staticmethod
-    def potentialEnergy(p1,p2,G):
+    def potential_energy(p1,p2,G):
         return -G*p1.mass*p2.mass/Particle3D.separation(p1,p2)**2
 
+    # force_vector
     # Returns the gravitational force on a paricle (p1) due to another particle (p2)
     # Caution: p1 and p2 must be at different spatial posions, or this method will divide by zero.
     # Arguments- Particle3D objects: p1, p2; floats: G
     @staticmethod
-    def forceVector(p1,p2,G):
+    def force_vector(p1,p2,G):
         return (G*p1.mass*p2.mass/Particle3D.separation(p1,p2)**3)*Particle3D.vector_position_wrt(p1,p2)
 
+    # from_file
     # Static method to create a particle from a file entry.
     # It takes a file handle as argument and returns a Particle 3D object
     # The file should be formatted in the following way:
