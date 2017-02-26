@@ -62,11 +62,11 @@ from Celestial import Celestial as CEL
 # ---------------
 
 # Universal Gravitational Constant G (Still need to think of what units to use)
-G = 1.0
+G = 6.67e-11
 # Time step size dt (Still need to think of a good value and units)
-dt = 0.001
+dt = 0.0001
 # Total time of simulation (Still need to think of a good value and units) (It is assumed that dt is a factor of tTotal)
-tTotal = 2.0
+tTotal = 20.0
 
 # User Input and Program Execution
 # ---------------
@@ -106,7 +106,7 @@ celestialList = []
 with open("particles.txt", "r") as file_handle:
     for line in file_handle:
         components = line.split()
-        celestialList = celestialList + [ CEL(P3D.from_line(line), np.array([0, 0, 0]), components[8]) ]
+        celestialList = celestialList + [ CEL(P3D.from_line(line), components[8]) ]
 
 # Initialize all the forces acting on each body
 CEL.globalForceUpdate_Initialization(G)
@@ -115,11 +115,20 @@ CEL.globalForceUpdate_Initialization(G)
 # by correcting for the motion of the centre of mass.
 CEL.globalCOM_Correction()
 
+# Associated with each orbiting body is a central body, about which the orbiting body will revolve about.
+# This method pairs the orbiting body with its corresponding central body, by giving each orbiting body a "partnerObj"
+# The partnerObj is the Celestial object of the central body.
+# This makes it easier to reference the body about which another orbits.
+CEL.globalCentralBody_Initialization()
+
+# Find all the vectors from the central bodies to the orbiting bodies.
+CEL.globalOrbitPosVecUpdate_Initialization()
+
 # Set up data lists
 # ---------------
 
-# EValue is a list that stores the total energy of the system at various times
-EValue = []
+# energyList is a list that stores the total energy of the system at various times
+energyList = []
 
 # Main simulation loop
 # ---------------
@@ -129,7 +138,10 @@ for t in np.arange(0, tTotal + dt, dt):
     # Data
     # ---------------
     CEL.globalPositionPrint_XYZ(trajectory_File_Handel, t)
-    EValue.append(CEL.totalEnergy(G))
+    energyList.append(CEL.totalEnergy(G))
+    # Period
+        #CEL.globalOrbitPosVecUpdate()
+        #CEL.globalAngle_Check_and_Update(t)
 
     # Dynamics
     # ---------------
@@ -137,17 +149,20 @@ for t in np.arange(0, tTotal + dt, dt):
     CEL.globalForceUpdate(G)
     CEL.globalLeapVelocity(dt)
 
+for obj in CEL.objReg:
+    print obj.periodTimes
+
 # Data presentation
 # ---------------
 
 # Plotting Total Energy
 
-pyplot.plot( np.arange(0, tTotal +dt , dt), EValue)
+pyplot.plot(np.arange(0, tTotal +dt , dt), energyList)
 pyplot.title("The total energy of the Solar System as a function of time")
 pyplot.xlabel("Time (UNITS)")
 pyplot.ylabel("Total energy (UNITS)")
-# Plot additional line showing the theoretical value of energy
-pyplot.axhline(y=EValue[0], color='r', linestyle='dashed')
-# pyplot.savefig('SolarSystem_energy.png')
+# Plot additional line showing the initial value of the energy.
+pyplot.axhline(y=energyList[0], color='r', linestyle='dashed')
+#               pyplot.savefig('SolarSystem_energy.png')
 pyplot.show()
 
