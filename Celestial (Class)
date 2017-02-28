@@ -110,7 +110,7 @@ class Celestial (object):
     # makes it so that the updated net force acting on the body of interest is stored in a new row of the
     # Nx3 force_History matrix. This way the past, present and future forces on the bodies the can be easily known.
     # Note that the convention is so that the LAST ROW of force_History is the force acting on the particle at time t+dt
-    # the SECOND TO LAST ROW of force_forceHistory is the force acting on the particle at time t.
+    # the PENULTIMATE row of force_forceHistory is the force acting on the particle at time t.
     @staticmethod
     def globalForceUpdate(G):
         for obj in Celestial.objReg:
@@ -156,7 +156,7 @@ class Celestial (object):
         # Define the centre of mass velocity as the the momentum of the COM divided by the system mass
         velocityCOM=momentumCOM / totalMass
 
-        # Go though every particle and subtract off the COM velocity contribution from their velocity.
+        # Go through every particle and subtract off the COM velocity contribution from their velocity.
         # This changes the frame of reference of our system to one who's origin coincides with the position of the COM.
         for obj in Celestial.objReg:
             obj.P3D.velocity = obj.P3D.velocity - velocityCOM
