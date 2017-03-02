@@ -61,12 +61,19 @@ from Celestial import Celestial as CEL
 # Global Constants
 # ---------------
 
-# Universal Gravitational Constant G (Still need to think of what units to use)
-G = 6.67e-11
-# Time step size dt (Still need to think of a good value and units)
-dt = 0.0001
-# Total time of simulation (Still need to think of a good value and units) (It is assumed that dt is a factor of tTotal)
-tTotal = 20.0
+# Universal Gravitational Constant G (m^3 kg^-1 s^-2)
+G_Experimental = 6.674e-11
+# Time step size dt (days)
+dt = 1.0
+# Total time of simulation (days) (It is assumed that dt is a factor of tTotal)
+tTotal = 6*4*(365.25)
+# Conversions:
+Meters_In_AU = 149597870700.0
+Kilograms_In_EarthMass = 5.972e24
+Seconds_In_Year = 31557600.0 # We will be using Julian Years
+Seconds_In_Day = 86400.0
+# The value of G that will be used in the simulation (Simulation Units)
+G = G_Experimental * Kilograms_In_EarthMass * Seconds_In_Day**2  / (Meters_In_AU**3 )
 
 # User Input and Program Execution
 # ---------------
@@ -93,17 +100,34 @@ outfile4 = open(outfileName4, "w")
 
 # Attach file handle to input file
 file_handle = open("particles.txt", "r")
-
 # Return number of lines in the input file
 num_lines = len(file_handle.readlines())
 # The number of lines is equal to the number of particles in the simulation. We will save this number with another name.
 particleNumber = num_lines
 
+def metersToAU(m): return (m / Meters_In_AU)
+def kilogramsToEarthMass(kg): return (kg / Kilograms_In_EarthMass)
+
+augmentedParticle_File_Handel = open("augmentedParticles.txt", "w")
+with open("particles.txt", "r") as file_handle:
+    for line in file_handle:
+        comp = line.split()
+        augmentedParticle_File_Handel.write(comp[0] +" "+ str(kilogramsToEarthMass(float(comp[1])))+" ")
+        for i in range(2,5):
+            augmentedParticle_File_Handel.write(comp[i]+" ")
+        for i in range(5,8):
+            augmentedParticle_File_Handel.write(comp[i]+" ")
+        augmentedParticle_File_Handel.write(str(comp[8]))
+        augmentedParticle_File_Handel.write("\n")
+augmentedParticle_File_Handel.close()
+
+
+
 # Initialize list that stores Celestial objects
 celestialList = []
 
 # Read the particle data for the all the particles from file and save it in celestialList
-with open("particles.txt", "r") as file_handle:
+with open("augmentedParticles.txt", "r") as file_handle:
     for line in file_handle:
         components = line.split()
         celestialList = celestialList + [ CEL(P3D.from_line(line), components[8]) ]
@@ -127,7 +151,9 @@ CEL.globalOrbitPosVecUpdate_Initialization()
 # Set up data lists
 # ---------------
 
-# energyList is a list that stores the total energy of the system at various times
+# The following lists will store the potential energy, kinetic energy, and total energy of the system at various times
+potentialEnergyList = []
+kineticEnergyList = []
 energyList = []
 
 # Main simulation loop
@@ -138,7 +164,9 @@ for t in np.arange(0, tTotal + dt, dt):
     # Data
     # ---------------
     CEL.globalPositionPrint_XYZ(trajectory_File_Handel, t)
-    energyList.append(CEL.totalEnergy(G))
+    potentialEnergyList.append(CEL.totalPotentialEnergy(G))
+    kineticEnergyList.append(CEL.totalKineticEnergy())
+    energyList.append(potentialEnergyList[-1]+kineticEnergyList[-1])
     # Period
         #CEL.globalOrbitPosVecUpdate()
         #CEL.globalAngle_Check_and_Update(t)
@@ -149,20 +177,22 @@ for t in np.arange(0, tTotal + dt, dt):
     CEL.globalForceUpdate(G)
     CEL.globalLeapVelocity(dt)
 
-for obj in CEL.objReg:
-    print obj.periodTimes
-
 # Data presentation
 # ---------------
 
 # Plotting Total Energy
 
 pyplot.plot(np.arange(0, tTotal +dt , dt), energyList)
+pyplot.plot(np.arange(0, tTotal +dt , dt), kineticEnergyList)
+pyplot.plot(np.arange(0, tTotal +dt , dt), potentialEnergyList)
+
 pyplot.title("The total energy of the Solar System as a function of time")
 pyplot.xlabel("Time (UNITS)")
 pyplot.ylabel("Total energy (UNITS)")
-# Plot additional line showing the initial value of the energy.
+pyplot.axhline(y=0, color='b', linestyle='dashed')
+# Plot additional horizontal line line showing the initial value of the energy.
 pyplot.axhline(y=energyList[0], color='r', linestyle='dashed')
+
+pyplot.legend(['Total Energy', 'Kinetic Energy', 'Potential Energy', 'E=0', 'Initial Total Energy'], loc='upper right')
 #               pyplot.savefig('SolarSystem_energy.png')
 pyplot.show()
-
