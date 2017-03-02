@@ -71,6 +71,27 @@ class Celestial (object):
     # Static Methods
     # ----------------
 
+    # The totalKineticEnergy method returns the total kinetic energy of all physical existing Celestial bodies
+    @staticmethod
+    def totalKineticEnergy():
+        totalKE = 0.0
+        # Cycle though every Celestial object that has been called into existence in the program so far
+        for obj in Celestial.objReg:
+            # Add the kinetic energy of all the bodies to the total energy
+            totalKE = totalKE + P3D.kineticEnergy(obj.P3D)
+        return totalKE
+
+    # The totalPotentialEnergy method returns the total potential energy of all physical existing Celestial bodies.
+    @staticmethod
+    def totalPotentialEnergy(G):
+        totalPE = 0.0
+        for obj in Celestial.objReg:
+            # Now go though all the pair potentials and add their contribution to the total energy
+            # Note the sum below is one of the type SIGMA_{j<i} ie. there is no double counting
+            for obj2 in Celestial.objReg[:Celestial.objReg.index(obj)]:
+                totalPE = totalPE + P3D.potential_energy(obj.P3D, obj2.P3D, G)
+        return totalPE
+
     # The totalEnergy method returns the total energy of the system (KE and pair PE of all existing Celestial instances)
     # The gravitational constant has to be specified as an input parameter
     @staticmethod
@@ -110,7 +131,7 @@ class Celestial (object):
     # makes it so that the updated net force acting on the body of interest is stored in a new row of the
     # Nx3 force_History matrix. This way the past, present and future forces on the bodies the can be easily known.
     # Note that the convention is so that the LAST ROW of force_History is the force acting on the particle at time t+dt
-    # the PENULTIMATE row of force_forceHistory is the force acting on the particle at time t.
+    # the SECOND TO LAST ROW of force_forceHistory is the force acting on the particle at time t.
     @staticmethod
     def globalForceUpdate(G):
         for obj in Celestial.objReg:
@@ -156,7 +177,7 @@ class Celestial (object):
         # Define the centre of mass velocity as the the momentum of the COM divided by the system mass
         velocityCOM=momentumCOM / totalMass
 
-        # Go through every particle and subtract off the COM velocity contribution from their velocity.
+        # Go though every particle and subtract off the COM velocity contribution from their velocity.
         # This changes the frame of reference of our system to one who's origin coincides with the position of the COM.
         for obj in Celestial.objReg:
             obj.P3D.velocity = obj.P3D.velocity - velocityCOM
@@ -218,7 +239,5 @@ class Celestial (object):
             if obj.angle >= 2*math.pi:
                 obj.angle = 0.0
                 obj.periodTimes = obj.periodTimes + [t]
-
-
 
 
