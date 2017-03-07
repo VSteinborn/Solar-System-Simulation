@@ -90,7 +90,7 @@ else:
     outfileName3 = sys.argv[3]
     outfileName4 = sys.argv[4]
 # Open output file for writing
-trajectory_File_Handel = open(trajectory_File_Name, "w")
+trajectory_File_Handle = open(trajectory_File_Name, "w")
 outfile2 = open(outfileName2, "w")
 outfile3 = open(outfileName3, "w")
 outfile4 = open(outfileName4, "w")
@@ -109,18 +109,18 @@ def metersToAU(m): return (m / Meters_In_AU)
 def kilogramsToEarthMass(kg): return (kg / Kilograms_In_EarthMass)
 
 # Augment file handle with a list of particles so the particles' masses are in units of Earth masses
-augmentedParticle_File_Handel = open("augmentedParticles.txt", "w")
+augmentedParticle_File_Handle = open("augmentedParticles.txt", "w")
 with open("particles.txt", "r") as file_handle:
     for line in file_handle:
         comp = line.split()
-        augmentedParticle_File_Handel.write(comp[0] +" "+ str(kilogramsToEarthMass(float(comp[1])))+" ")
+        augmentedParticle_File_Handle.write(comp[0] +" "+ str(kilogramsToEarthMass(float(comp[1])))+" ")
         for i in range(2,5):
-            augmentedParticle_File_Handel.write(comp[i]+" ")
+            augmentedParticle_File_Handle.write(comp[i]+" ")
         for i in range(5,8):
-            augmentedParticle_File_Handel.write(comp[i]+" ")
-        augmentedParticle_File_Handel.write(str(comp[8]))
-        augmentedParticle_File_Handel.write("\n")
-augmentedParticle_File_Handel.close()
+            augmentedParticle_File_Handle.write(comp[i]+" ")
+        augmentedParticle_File_Handle.write(str(comp[8]))
+        augmentedParticle_File_Handle.write("\n")
+augmentedParticle_File_Handle.close()
 
 
 
@@ -164,7 +164,7 @@ energyList = []
 for t in np.arange(0, tTotal + dt, dt):
     # Data
     # ---------------
-    CEL.globalPositionPrint_XYZ(trajectory_File_Handel, t)
+    CEL.globalPositionPrint_XYZ(trajectory_File_Handle, t)
     potentialEnergyList.append(CEL.totalPotentialEnergy(G))
     kineticEnergyList.append(CEL.totalKineticEnergy())
     energyList.append(potentialEnergyList[-1]+kineticEnergyList[-1])
