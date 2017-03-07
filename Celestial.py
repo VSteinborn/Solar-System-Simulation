@@ -241,7 +241,19 @@ class Celestial (object):
                 obj.periodTimes = obj.periodTimes + [t]
                 for i in range [1,np.shape(orbitVec_History)[0]]
                      
-
+    @staticmethod
+    def globalAngle_Check_and_Update(t):
+        for obj in Celestial.objReg
+            dotProduct = np.dot(obj.orbitVec_History[-1],obj.orbitVec_History[-dtSkip])
+            normOld = np.linalg.norm(obj.orbitVec_History[-dtSkip])
+            normNew = np.linalg.norm(obj.orbitVec_History[-1])
+            deltaAngle = math.acos(dotProduct /(normOld * normNew))
+            obj.angle = obj.angle + deltaAngle
+            if obj.angle >= 2*math.pi:
+                obj.angle = 0.0
+                obj.periodTimes = obj.periodTimes + [t]
+                    
+                    
     @staticmethod
     def globalAngle_Check_and_Update(t):
         for obj in Celestial.objReg
