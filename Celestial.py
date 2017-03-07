@@ -65,6 +65,7 @@ class Celestial (object):
         self.angle = 0.0
         self.orbitVec_History = np.array([0,0,0])
         self.periodTimes = []
+        self.dtSkip = 0
 
 
 
@@ -199,7 +200,8 @@ class Celestial (object):
             # Note that the str method for particle3D objects has been defined to return a string in the XYZ file format
             trajectory_File_Handle.write(str(obj.P3D))
             trajectory_File_Handle.write("\n")
-    # 
+            
+    # Determines the object around which a specific object orbits  
     @staticmethod
     def globalCentralBody_Initialization():
         for obj in Celestial.objReg:
@@ -207,16 +209,15 @@ class Celestial (object):
                 if obj != obj2 and obj.orbitingAround != 'NONE' and obj2.P3D.label == obj.orbitingAround :
                     obj.centralObj = obj2
 
+    # Determines the initial vector postition of each object wrt the central body it orbits.
+    # If the body does not orbit any other body in the system its position is left unchanged.
     @staticmethod
     def globalOrbitPosVecUpdate_Initialization():
         for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
                 fromCentre = P3D.vector_position_wrt(obj.P3D, obj.centralObj.P3D)
                 obj.orbitVec_History = fromCentre
-            if obj.orbitingAround == 'NONE':
-                fromCentre = obj.P3D.position
-                obj.orbitVec_History = fromCentre
-
+    #             
     @staticmethod
     def globalOrbitPosVecUpdate():
         for obj in Celestial.objReg:
@@ -226,23 +227,24 @@ class Celestial (object):
             if obj.orbitingAround == 'NONE':
                 fromCentre = obj.P3D.position
                 obj.orbitVec_History = np.vstack((obj.orbitVec_History, fromCentre))
-    
+                
+    # Calculates the period of 
     @staticmethod
     def globalPeriodCalculation(t):
         for obj in Celestial.objReg:
-            dotProduct = np.dot(obj.orbitVec_History[-1],obj.orbitVec_History[-2])
-            normOld = np.linalg.norm(obj.orbitVec_History[-2])
-            normNew = np.linalg.norm(obj.orbitVec_History[-1])
-            deltaAngle = math.acos(dotProduct /(normOld * normNew))
-            obj.angle = obj.angle + deltaAngle
-            if obj.angle >= 2*math.pi:
-                obj.angle = 0.0
+            for i in range [1,np.shape(orbitVec_History)[0]]
+                dotProduct = np.dot(obj.orbitVec_History[0],obj.orbitVec_History[i])
+                normOld = np.linalg.norm(obj.orbitVec_History[0])
+                normNew = np.linalg.norm(obj.orbitVec_History[i])
+                deltaAngle = math.acos(dotProduct /(normOld * normNew))
+                if deltaAngle >= 0.5*math.pi:
                 obj.periodTimes = obj.periodTimes + [t]
-
+                for i in range [1,np.shape(orbitVec_History)[0]]
+                     
 
     @staticmethod
     def globalAngle_Check_and_Update(t):
-        for obj in Celestial.objReg:
+        for obj in Celestial.objReg
             dotProduct = np.dot(obj.orbitVec_History[-1],obj.orbitVec_History[-2])
             normOld = np.linalg.norm(obj.orbitVec_History[-2])
             normNew = np.linalg.norm(obj.orbitVec_History[-1])
