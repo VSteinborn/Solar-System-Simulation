@@ -61,7 +61,7 @@ class Celestial (object):
         self.P3D = P3D
         self.force_History = np.array([0,0,0])
         self.orbitingAround = orbitingAround
-        self.partnerObj = 0
+        self.centralObj = 0
         self.angle = 0.0
         self.orbitVec_History = np.array([0,0,0])
         self.periodTimes = []
@@ -97,7 +97,7 @@ class Celestial (object):
     @staticmethod
     def totalEnergy(G):
         totalEnergy=0.0
-        # Cycle though every Celestial object that has been called into existence in the program so far
+        # Cycle through every Celestial object that has been called into existence in the program so far
         for obj in Celestial.objReg:
             # Add the kinetic energy of all the bodies to the total energy
             totalEnergy = totalEnergy + P3D.kineticEnergy(obj.P3D)
@@ -187,31 +187,31 @@ class Celestial (object):
     # The method writes the positions of all the bodies, at the time it is called.
     # It also notes the time the method was called in the comment line.
     @staticmethod
-    def globalPositionPrint_XYZ(trajectory_File_Handel, t):
+    def globalPositionPrint_XYZ(trajectory_File_Handle, t):
         # Note the number of objects that are being written to the file
-        trajectory_File_Handel.write(str(len(Celestial.objReg)))
-        trajectory_File_Handel.write("\n")
+        trajectory_File_Handle.write(str(len(Celestial.objReg)))
+        trajectory_File_Handle.write("\n")
         # Note the time the method was called (the time is given as an input, when calling the function)
-        trajectory_File_Handel.write("Time = " + str(t))
-        trajectory_File_Handel.write("\n")
+        trajectory_File_Handle.write("Time = " + str(t))
+        trajectory_File_Handle.write("\n")
         # Go though every existing object and write its position to the input file handle
         for obj in Celestial.objReg:
             # Note that the str method for particle3D objects has been defined to return a string in the XYZ file format
-            trajectory_File_Handel.write(str(obj.P3D))
-            trajectory_File_Handel.write("\n")
-
+            trajectory_File_Handle.write(str(obj.P3D))
+            trajectory_File_Handle.write("\n")
+    # 
     @staticmethod
     def globalCentralBody_Initialization():
         for obj in Celestial.objReg:
             for obj2 in Celestial.objReg:
                 if obj != obj2 and obj.orbitingAround != 'NONE' and obj2.P3D.label == obj.orbitingAround :
-                    obj.partnerObj = obj2
+                    obj.centralObj = obj2
 
     @staticmethod
     def globalOrbitPosVecUpdate_Initialization():
         for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
-                fromCentre = P3D.vector_position_wrt(obj.P3D, obj.partnerObj.P3D)
+                fromCentre = P3D.vector_position_wrt(obj.P3D, obj.centralObj.P3D)
                 obj.orbitVec_History = fromCentre
             if obj.orbitingAround == 'NONE':
                 fromCentre = obj.P3D.position
@@ -221,11 +221,23 @@ class Celestial (object):
     def globalOrbitPosVecUpdate():
         for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
-                fromCentre = P3D.vector_position_wrt(obj.P3D, obj.partnerObj.P3D)
+                fromCentre = P3D.vector_position_wrt(obj.P3D, obj.centralObj.P3D)
                 obj.orbitVec_History = np.vstack((obj.orbitVec_History, fromCentre))
             if obj.orbitingAround == 'NONE':
                 fromCentre = obj.P3D.position
                 obj.orbitVec_History = np.vstack((obj.orbitVec_History, fromCentre))
+    
+    @staticmethod
+    def globalPeriodCalculation(t):
+        for obj in Celestial.objReg:
+            dotProduct = np.dot(obj.orbitVec_History[-1],obj.orbitVec_History[-2])
+            normOld = np.linalg.norm(obj.orbitVec_History[-2])
+            normNew = np.linalg.norm(obj.orbitVec_History[-1])
+            deltaAngle = math.acos(dotProduct /(normOld * normNew))
+            obj.angle = obj.angle + deltaAngle
+            if obj.angle >= 2*math.pi:
+                obj.angle = 0.0
+                obj.periodTimes = obj.periodTimes + [t]
 
 
     @staticmethod
@@ -239,5 +251,7 @@ class Celestial (object):
             if obj.angle >= 2*math.pi:
                 obj.angle = 0.0
                 obj.periodTimes = obj.periodTimes + [t]
+
+
 
 
