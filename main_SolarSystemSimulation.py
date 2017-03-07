@@ -108,6 +108,7 @@ particleNumber = num_lines
 def metersToAU(m): return (m / Meters_In_AU)
 def kilogramsToEarthMass(kg): return (kg / Kilograms_In_EarthMass)
 
+# Augment file handle with a list of particles so the particles' masses are in units of Earth masses
 augmentedParticle_File_Handel = open("augmentedParticles.txt", "w")
 with open("particles.txt", "r") as file_handle:
     for line in file_handle:
