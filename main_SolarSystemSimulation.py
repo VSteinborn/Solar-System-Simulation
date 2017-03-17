@@ -67,25 +67,29 @@ Seconds_In_Day = 86400.0
 # The value of G that will be used in the simulation (Simulation Units)
 G = G_Experimental * Kilograms_In_EarthMass * Seconds_In_Day**2  / (Meters_In_AU**3 )
 
+# Conversions
+def metersToAU(m): return (m / Meters_In_AU)
+def kilogramsToEarthMass(kg): return (kg / Kilograms_In_EarthMass)
+def simulationEnergyToGJ(energy): return  energy * Kilograms_In_EarthMass* Meters_In_AU**2 / (Seconds_In_Day**2)*1.0e-9
+def daysToYears(days): return days * Seconds_In_Day / Seconds_In_Year
+
 # User Input and Program Execution
 # ---------------
 
 # Read name of 4 output files from command line: trajectory, energy, extrema and periods
-if len(sys.argv) != 5:
+if len(sys.argv) != 4:
     print    "Wrong number of arguments."
     print    "Usage: " + sys.argv[
-        0] + " <trajectory output file>" + " <energy output file>" + " <extrema output file>" + " <periods output file>"
+        0] + " <trajectory output file>" + " <extrema output file>" + " <periods output file>"
     quit()
 else:
     trajectory_File_Name = sys.argv[1]
-    outfileName2 = sys.argv[2]
+    periAndApo_File_Name = sys.argv[2]
     outfileName3 = sys.argv[3]
-    outfileName4 = sys.argv[4]
 # Open output file for writing
 trajectory_File_Handle = open(trajectory_File_Name, "w")
-outfile2 = open(outfileName2, "w")
+periAndApo_File_Handle = open(periAndApo_File_Name, "w")
 outfile3 = open(outfileName3, "w")
-outfile4 = open(outfileName4, "w")
 
 # Reading Input Files and Initializing Celestial bodies
 # ---------------
@@ -97,8 +101,7 @@ num_lines = len(file_handle.readlines())
 # The number of lines is equal to the number of particles in the simulation. We will save this number with another name.
 particleNumber = num_lines
 
-def metersToAU(m): return (m / Meters_In_AU)
-def kilogramsToEarthMass(kg): return (kg / Kilograms_In_EarthMass)
+
 
 # Augment file handle with a list of particles so the particles' masses are in units of Earth masses
 augmentedParticle_File_Handle = open("augmentedParticles.txt", "w")
@@ -138,7 +141,7 @@ CEL.globalCOM_Correction()
 # This makes it easier to reference the body about which another orbits.
 CEL.globalCentralBody_Initialization()
 
-# Find all the vectors from the central bodies to the orbiting bodies.
+# Find all the initial vectors from the central bodies to the orbiting bodies.
 CEL.globalOrbitPosVecUpdate_Initialization()
 
 # Set up data lists
@@ -151,18 +154,18 @@ energyList = []
 
 # Main simulation loop
 # ---------------
+timeArray=np.arange(0, tTotal + dt, dt)
 
 # Simulation runs from t=0 to t=tTotal (Including boundaries) in time steps of dt.
-for t in np.arange(0, tTotal + dt, dt):
+for t in timeArray:
     # Data
     # ---------------
     CEL.globalPositionPrint_XYZ(trajectory_File_Handle, t)
-    potentialEnergyList.append(CEL.totalPotentialEnergy(G))
-    kineticEnergyList.append(CEL.totalKineticEnergy())
-    energyList.append(potentialEnergyList[-1]+kineticEnergyList[-1])
-    # Period
-        #CEL.globalOrbitPosVecUpdate()
-        #CEL.globalAngle_Check_and_Update(t)
+    potentialEnergyList.append( CEL.totalPotentialEnergy(G))
+    kineticEnergyList.append( CEL.totalKineticEnergy())
+    energyList.append( potentialEnergyList[-1] + kineticEnergyList[-1])
+    CEL.globalOrbitPosVecUpdate()
+    CEL.globalOrbitSeparationUpdate()
 
     # Dynamics
     # ---------------
@@ -173,19 +176,57 @@ for t in np.arange(0, tTotal + dt, dt):
 # Data presentation
 # ---------------
 
-# Plotting Total Energy
+# Convert Energies to SI
+energyInGJList = [simulationEnergyToGJ(x) for x in energyList]
+keInGJList = [simulationEnergyToGJ(x) for x in kineticEnergyList]
+peInGJList = [simulationEnergyToGJ(x) for x in potentialEnergyList]
+# Convert Times to (Julian) Years
+timeInYears = [daysToYears(t) for t in np.arange(0, tTotal +dt , dt)]
 
-pyplot.plot(np.arange(0, tTotal +dt , dt), energyList)
-pyplot.plot(np.arange(0, tTotal +dt , dt), kineticEnergyList)
-pyplot.plot(np.arange(0, tTotal +dt , dt), potentialEnergyList)
+# Plotting Energies of the System (In SI units)
+pyplot.plot(timeInYears, energyInGJList)
+pyplot.plot(timeInYears, keInGJList)
+pyplot.plot(timeInYears, peInGJList)
 
 pyplot.title("The total energy of the Solar System as a function of time")
-pyplot.xlabel("Time (UNITS)")
-pyplot.ylabel("Total energy (UNITS)")
+pyplot.xlabel("Time (Years)")
+pyplot.ylabel("Total energy (GJ)")
 pyplot.axhline(y=0, color='b', linestyle='dashed')
 # Plot additional horizontal line line showing the initial value of the energy.
 pyplot.axhline(y=energyList[0], color='r', linestyle='dashed')
 
 pyplot.legend(['Total Energy', 'Kinetic Energy', 'Potential Energy', 'E=0', 'Initial Total Energy'], loc='upper right')
 #               pyplot.savefig('SolarSystem_energy.png')
+pyplot.figure()
+
+# Plotting Total Energy of the system only, *In SI units)
+
+pyplot.plot(timeInYears, energyInGJList)
+pyplot.title("The total energy of the Solar System as a function of time")
+pyplot.xlabel("Time (Years)")
+pyplot.ylabel("Total energy (GJ)")
+# Plot additional horizontal line line showing the initial value of the energy.
+pyplot.figure()
+
+# Plotting orbital separations
+CEL.globalApoAndPeriapsesIndexSearch()
+for obj in CEL.objReg:
+    if obj.orbitingAround != 'NONE':
+        pyplot.plot(timeInYears, obj.orbitSeparation)
+        pyplot.title("Separation of "+ obj.P3D.label +" from the " + obj.orbitingAround + " as a function of time")
+        pyplot.xlabel("Time (Years)")
+        pyplot.ylabel("Distance (AU)")
+
+        periAndApo_File_Handle.write("Periapsis Times (days): " + obj.P3D.label)
+        periAndApo_File_Handle.write('\n')
+        for i in obj.perhapsesIndex:
+            periAndApo_File_Handle.write(str(timeArray[i]) + "\n")
+        periAndApo_File_Handle.write('\n')
+
+        periAndApo_File_Handle.write("Apoapsis Times (days): " + obj.P3D.label)
+        periAndApo_File_Handle.write('\n')
+        for i in obj.apoapsisIndex:
+            periAndApo_File_Handle.write(str(timeArray[i]) + "\n")
+        periAndApo_File_Handle.write('\n')
+        pyplot.figure()
 pyplot.show()
