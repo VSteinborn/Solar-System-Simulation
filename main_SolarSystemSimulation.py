@@ -23,7 +23,7 @@ This file contains the main script that is used to simulate the Solar System, us
 
 
 This file contains the main program that simulates the evolution of the system consisting of an arbitrary number of particles using the velocity Verlet time integration
-algorithm, as function of time in an external potential,
+algorithm, as a function of time in an external potential,
 with given initial conditions.
 
 To run the program, names of 4 output files must be written to the command line.
@@ -38,14 +38,6 @@ Current Assumptions:
 -The distance between two bodies will never be less than or equal to the sum of their radii. (point particle treatment)
 -The orbital period is the amount of time it takes for the particle to complete an orbit about the central particle.
 
-comments for Victor:
------------------
--I think when we write short comments starting with # we should be more concise, e.g. Read name of output file from command line
-instead of Reads the name of the output file...
-
-Comments for Tomasz:
------------------
--Ok, but the comments should also be more readable to the eye, in terms of formatting.
 """
 
 # Imports
