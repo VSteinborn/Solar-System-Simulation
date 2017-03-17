@@ -32,7 +32,7 @@ Assumptions and Conventions:
 import math
 import numpy as np
 from Particle3D import Particle3D as P3D
-
+from scipy.signal import argrelextrema
 
 # Celestial Class
 # ----------------
@@ -62,10 +62,15 @@ class Celestial (object):
         self.force_History = np.array([0,0,0])
         self.orbitingAround = orbitingAround
         self.centralObj = 0
-        self.angle = 0.0
         self.orbitVec_History = np.array([0,0,0])
+        self.orbitSeparation = np.array([])
+        self.perhapsesIndex=[]
+        self.apoapsisIndex=[]
+
+
         self.periodTimes = []
         self.dtSkip = 0
+        self.angle = 0.0
 
 
 
@@ -224,48 +229,66 @@ class Celestial (object):
             if obj.orbitingAround != 'NONE':
                 fromCentre = P3D.vector_position_wrt(obj.P3D, obj.centralObj.P3D)
                 obj.orbitVec_History = np.vstack((obj.orbitVec_History, fromCentre))
-            if obj.orbitingAround == 'NONE':
-                fromCentre = obj.P3D.position
-                obj.orbitVec_History = np.vstack((obj.orbitVec_History, fromCentre))
-                
-    # Calculates the period of 
+
     @staticmethod
-    def globalPeriodCalculation(t):
+    def globalOrbitSeparationUpdate():
         for obj in Celestial.objReg:
-            for i in range [1,np.shape(orbitVec_History)[0]]
-                dotProduct = np.dot(obj.orbitVec_History[0],obj.orbitVec_History[i])
-                normOld = np.linalg.norm(obj.orbitVec_History[0])
-                normNew = np.linalg.norm(obj.orbitVec_History[i])
-                deltaAngle = math.acos(dotProduct /(normOld * normNew))
-                if deltaAngle >= 0.5*math.pi:
-                obj.periodTimes = obj.periodTimes + [t]
-                for i in range [1,np.shape(orbitVec_History)[0]]
+            if obj.orbitingAround != 'NONE':
+                obj.orbitSeparation = np.append( obj.orbitSeparation, np.linalg.norm( obj.orbitVec_History[-1]))
+
+    @staticmethod
+    def globalApoAndPeriapsesIndexSearch():
+        for obj in Celestial.objReg:
+            if obj.orbitingAround != 'NONE':
+                # Periapsis (Closest)
+                perhapsesIndexTuple = argrelextrema(obj.orbitSeparation, np.less)
+                obj.perhapsesIndex = perhapsesIndexTuple[0].tolist()
+                # Apoapsis (Furthest)
+                apoapsisIndexTuple = argrelextrema(obj.orbitSeparation, np.greater)
+                obj.apoapsisIndex = apoapsisIndexTuple[0].tolist()
+
+
+
+
+
+
+
+    # Calculates the period of 
+#    @staticmethod
+ #   def globalPeriodCalculation(t):
+  #      for obj in Celestial.objReg:
+   #         for i in range [1,np.shape(orbitVec_History)[0]]
+    #            dotProduct = np.dot(obj.orbitVec_History[0],obj.orbitVec_History[i])
+     #           normOld = np.linalg.norm(obj.orbitVec_History[0])
+      #          normNew = np.linalg.norm(obj.orbitVec_History[i])
+       #         deltaAngle = math.acos(dotProduct /(normOld * normNew))
+        #        if deltaAngle >= 0.5*math.pi:
+         #       obj.periodTimes = obj.periodTimes + [t]
+          #      for i in range [1,np.shape(orbitVec_History)[0]]
                      
-    @staticmethod
-    def globalAngle_Check_and_Update(t):
-        for obj in Celestial.objReg
-            dotProduct = np.dot(obj.orbitVec_History[-1],obj.orbitVec_History[-dtSkip])
-            normOld = np.linalg.norm(obj.orbitVec_History[-dtSkip])
-            normNew = np.linalg.norm(obj.orbitVec_History[-1])
-            deltaAngle = math.acos(dotProduct /(normOld * normNew))
-            obj.angle = obj.angle + deltaAngle
-            if obj.angle >= 2*math.pi:
-                obj.angle = 0.0
-                obj.periodTimes = obj.periodTimes + [t]
+#    @staticmethod
+ #   def globalAngle_Check_and_Update(t):
+  #      for obj in Celestial.objReg
+   #         dotProduct = np.dot(obj.orbitVec_History[-1],obj.orbitVec_History[-dtSkip])
+    #        normOld = np.linalg.norm(obj.orbitVec_History[-dtSkip])
+     #       normNew = np.linalg.norm(obj.orbitVec_History[-1])
+      #      deltaAngle = math.acos(dotProduct /(normOld * normNew))
+       #     obj.angle = obj.angle + deltaAngle
+        #    if obj.angle >= 2*math.pi:
+         #       obj.angle = 0.0
+          #      obj.periodTimes = obj.periodTimes + [t]
                     
                     
-    @staticmethod
-    def globalAngle_Check_and_Update(t):
-        for obj in Celestial.objReg
-            dotProduct = np.dot(obj.orbitVec_History[-1],obj.orbitVec_History[-2])
-            normOld = np.linalg.norm(obj.orbitVec_History[-2])
-            normNew = np.linalg.norm(obj.orbitVec_History[-1])
-            deltaAngle = math.acos(dotProduct /(normOld * normNew))
-            obj.angle = obj.angle + deltaAngle
-            if obj.angle >= 2*math.pi:
-                obj.angle = 0.0
-                obj.periodTimes = obj.periodTimes + [t]
-
-
+#    @staticmethod
+ #   def globalAngle_Check_and_Update(t):
+  #      for obj in Celestial.objReg
+   #         dotProduct = np.dot(obj.orbitVec_History[-1],obj.orbitVec_History[-2])
+    #        normOld = np.linalg.norm(obj.orbitVec_History[-2])
+     #       normNew = np.linalg.norm(obj.orbitVec_History[-1])
+      #      deltaAngle = math.acos(dotProduct /(normOld * normNew))
+       #     obj.angle = obj.angle + deltaAngle
+        #    if obj.angle >= 2*math.pi:
+         #       obj.angle = 0.0
+          #      obj.periodTimes = obj.periodTimes + [t]
 
 
