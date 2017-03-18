@@ -200,8 +200,7 @@ class Celestial (object):
         # Note the time the method was called (the time is given as an input, when calling the function)
         trajectory_File_Handle.write("Time = " + str(t))
         trajectory_File_Handle.write("\n")
-        # Go 
-        every existing object and write its position to the input file handle
+        # Go through every existing object and write its position to the input file handle
         for obj in Celestial.objReg:
             # Note that the str method for particle3D objects has been defined to return a string in the XYZ file format
             trajectory_File_Handle.write(str(obj.P3D))
