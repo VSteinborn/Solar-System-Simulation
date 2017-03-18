@@ -17,7 +17,7 @@ Current assignment:
 This file contains the Celestial class.
 The instances of this class are representations of celestial bodies in the solar system.
 This class is an extension of the Particle3D class.
-Whereas Particle3D focused on kinematics, Celestial will focus on astrophysical data
+While Particle3D focused on kinematics, Celestial will focus on astrophysical data
 and the interactions between the Particle3D objects.
 
 Assumptions and Conventions:
