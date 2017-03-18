@@ -129,8 +129,7 @@ with open("augmentedParticles.txt", "r") as file_handle:
 # Initialize all the forces acting on each body
 CEL.globalForceUpdate_Initialization(G)
 
-# Change the frame of reference of our system to one who's origin coincides with the position of the centre of mass,
-# by correcting for the motion of the centre of mass.
+# Change the frame of reference of the system to the centre-of-mass frame by correcting for the motion of the centre of mass
 CEL.globalCOM_Correction()
 
 # Associated with each orbiting body is a central body, about which the orbiting body will revolve about.
