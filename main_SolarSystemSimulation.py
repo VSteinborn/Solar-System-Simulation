@@ -96,10 +96,8 @@ outfile3 = open(outfileName3, "w")
 
 # Attach file handle to input file
 file_handle = open("particles.txt", "r")
-# Return number of lines in the input file
-num_lines = len(file_handle.readlines())
-# The number of lines is equal to the number of particles in the simulation. We will save this number with another name.
-particleNumber = num_lines
+# Return number of lines in the input file which represents the number of particles in the simulation
+particleNumber = len(file_handle.readlines())
 
 
 
