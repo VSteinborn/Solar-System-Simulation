@@ -81,7 +81,7 @@ class Celestial (object):
     @staticmethod
     def totalKineticEnergy():
         totalKE = 0.0
-        # Cycle though every Celestial object that has been called into existence in the program so far
+        # Cycle through every Celestial object that has been called into existence in the program so far
         for obj in Celestial.objReg:
             # Add the kinetic energy of all the bodies to the total energy
             totalKE = totalKE + P3D.kineticEnergy(obj.P3D)
@@ -92,7 +92,7 @@ class Celestial (object):
     def totalPotentialEnergy(G):
         totalPE = 0.0
         for obj in Celestial.objReg:
-            # Now go though all the pair potentials and add their contribution to the total energy
+            # Now go through all the pair potentials and add their contribution to the total energy
             # Note the sum below is one of the type SIGMA_{j<i} ie. there is no double counting
             for obj2 in Celestial.objReg[:Celestial.objReg.index(obj)]:
                 totalPE = totalPE + P3D.potential_energy(obj.P3D, obj2.P3D, G)
@@ -108,7 +108,7 @@ class Celestial (object):
             # Add the kinetic energy of all the bodies to the total energy
             totalEnergy = totalEnergy + P3D.kineticEnergy(obj.P3D)
 
-            # Now go though all the pair potentials and add their contribution to the total energy
+            # Now go through all the pair potentials and add their contribution to the total energy
             # Note the sum below is one of the type SIGMA_{j<i} ie. there is no double counting
             for obj2 in Celestial.objReg[:Celestial.objReg.index(obj)]:
                 totalEnergy = totalEnergy + P3D.potential_energy(obj.P3D, obj2.P3D, G)
@@ -159,7 +159,7 @@ class Celestial (object):
             # Update the velocity of the object of interest, given its force_History and time step dt using V-Verlet
             P3D.leapVelocity(obj.P3D, dt, obj.force_History[-2], obj.force_History[-1])
 
-    # The globalLeapPosition method updates the positions of all existing bodies, given a time step
+    # The globalLeapPosition method updates the positions of all existing bodies, given a time step dt
     @staticmethod
     def globalLeapPosition(dt):
         # Each particle will be treated individually
@@ -183,7 +183,7 @@ class Celestial (object):
         # Define the centre of mass velocity as the the momentum of the COM divided by the system mass
         velocityCOM=momentumCOM / totalMass
 
-        # Go though every particle and subtract off the COM velocity contribution from their velocity.
+        # Go through every particle and subtract off the COM velocity contribution from their velocity.
         # This changes the frame of reference of our system to one who's origin coincides with the position of the COM.
         for obj in Celestial.objReg:
             obj.P3D.velocity = obj.P3D.velocity - velocityCOM
@@ -200,7 +200,8 @@ class Celestial (object):
         # Note the time the method was called (the time is given as an input, when calling the function)
         trajectory_File_Handle.write("Time = " + str(t))
         trajectory_File_Handle.write("\n")
-        # Go though every existing object and write its position to the input file handle
+        # Go 
+        every existing object and write its position to the input file handle
         for obj in Celestial.objReg:
             # Note that the str method for particle3D objects has been defined to return a string in the XYZ file format
             trajectory_File_Handle.write(str(obj.P3D))
