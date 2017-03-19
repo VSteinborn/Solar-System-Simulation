@@ -151,9 +151,9 @@ energyList = []
 
 # Main simulation loop
 # ---------------
-timeArray=np.arange(0, tTotal + dt, dt)
 
-# Simulation runs from t=0 to t=tTotal (Including boundaries) in time steps of dt.
+# Simulation runs from t=0 to t=tTotal (Including boundaries) in time steps of dt
+timeArray=np.arange(0, tTotal + dt, dt) # returns an array of evenly spaced time steps: (0, dt,2*dt,...tTotal)
 for t in timeArray:
     # Data
     # ---------------
