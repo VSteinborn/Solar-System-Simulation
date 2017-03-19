@@ -257,7 +257,32 @@ class Celestial (object):
                 obj.apoapsisIndex = apoapsisIndexTuple[0].tolist()
 
 
+    # Calculates the period of 
+    @staticmethod
+    def globalPeriodCalculation(t):
+        for obj in Celestial.objReg:
+            for i in range [1,np.shape(orbitVec_History)[0]]:
+                dotProduct = np.dot(obj.orbitVec_History[0],obj.orbitVec_History[i])
+                normOld = np.linalg.norm(obj.orbitVec_History[0])
+                normNew = np.linalg.norm(obj.orbitVec_History[i])
+                deltaAngle = math.acos(dotProduct /(normOld * normNew))
+                if deltaAngle >= 0.5*math.pi:
+                    obj.periodTimes = obj.periodTimes + [t]
 
+    def angle_between(a,b):
+       arccosInput = np.dot(a,b)/np.linalg.norm(a)/np.linalg.norm(b)
+       arccosInput = 1.0 if arccosInput > 1.0 else arccosInput
+       arccosInput = -1.0 if arccosInput < -1.0 else arccosInput
+       return math.acos(arccosInput)
+
+    @staticmethod
+    def globalAngle_Check_and_Update(t):
+        for obj in Celestial.objReg:
+           deltaAngle = angle_between(obj.orbitVec_History[-1],obj.orbitVec_History[-2])
+           obj.angle = obj.angle + deltaAngle
+           if obj.angle >= 2*math.pi:
+              obj.angle = 0.0
+              obj.periodTimes = obj.periodTimes + [t]
 
 
 
