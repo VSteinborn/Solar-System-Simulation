@@ -133,11 +133,11 @@ class Celestial (object):
             # Update the net force acting on the body of interest
             obj.force_History = force
 
-    # The globalForceUpdate method is very similar to the globalForceUpdate_Initialization method, but this one
-    # makes it so that the updated net force acting on the body of interest is stored in a new row of the
-    # Nx3 force_History matrix. This way the past, present and future forces on the bodies the can be easily known.
+    # The globalForceUpdate method is similar to the globalForceUpdate_Initialization method, but this one
+    # stores the updated net force acting on the body of interest in a new row of the Nx3 force_History matrix
+    # This way the past, present and future forces on the bodies can be easily known.
     # Note that the convention is so that the LAST ROW of force_History is the force acting on the particle at time t+dt
-    # the PENULTIMATE row of force_forceHistory is the force acting on the particle at time t.
+    # the PENULTIMATE row of force_History is the force acting on the particle at time t.
     @staticmethod
     def globalForceUpdate(G):
         for obj in Celestial.objReg:
@@ -214,7 +214,7 @@ class Celestial (object):
                 if obj != obj2 and obj.orbitingAround != 'NONE' and obj2.P3D.label == obj.orbitingAround :
                     obj.centralObj = obj2
 
-    # Determines the initial vector postition of each object wrt the central body it orbits.
+    # Determines the initial vector position of each object wrt the central body it orbits.
     # If the body does not orbit any other body in the system its position is left unchanged.
     @staticmethod
     def globalOrbitPosVecUpdate_Initialization():
@@ -222,20 +222,29 @@ class Celestial (object):
             if obj.orbitingAround != 'NONE':
                 fromCentre = P3D.vector_position_wrt(obj.P3D, obj.centralObj.P3D)
                 obj.orbitVec_History = fromCentre
-    #             
+                
+    # The globalOrbitPosVecUpdate method is similar to the globalOrbitPosVecUpdate_Initialization method, but this one
+    # stores the updated position vector of the body of interest wrt to the central body it orbits in a new row of the Nx3 force_History matrix
+    # This way the past, present and future positions of the bodies can be easily known.
+    # Note that the convention is so that the LAST ROW of orbitVec_History is the position of the particle at time t+dt
+    # the PENULTIMATE row of orbitVec_History is the position of the particle at time t.
     @staticmethod
     def globalOrbitPosVecUpdate():
         for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
                 fromCentre = P3D.vector_position_wrt(obj.P3D, obj.centralObj.P3D)
+                # updated position vector is stacked at the bottom row of the orbitVec_History array
                 obj.orbitVec_History = np.vstack((obj.orbitVec_History, fromCentre))
-
+                
+    # Determines the magnitude of the (most recent) vector position of each orbiting object wrt the central body it orbits.
+    # In other words, it determines the separation of each orbiting object and the central body it orbits.
     @staticmethod
     def globalOrbitSeparationUpdate():
         for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
                 obj.orbitSeparation = np.append( obj.orbitSeparation, np.linalg.norm( obj.orbitVec_History[-1]))
-
+                
+    # Determines the apoapsis and periapsis of each orbiting object
     @staticmethod
     def globalApoAndPeriapsesIndexSearch():
         for obj in Celestial.objReg:
