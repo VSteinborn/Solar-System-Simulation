@@ -180,7 +180,7 @@ peInGJList = [simulationEnergyToGJ(x) for x in potentialEnergyList]
 # Convert Times to (Julian) Years
 timeInYears = [daysToYears(t) for t in np.arange(0, tTotal +dt , dt)]
 
-# Plotting Energies of the System (In SI units)
+# Plot energies (KE,PE and total) of the system (in SI units)
 pyplot.plot(timeInYears, energyInGJList)
 pyplot.plot(timeInYears, keInGJList)
 pyplot.plot(timeInYears, peInGJList)
@@ -196,7 +196,7 @@ pyplot.legend(['Total Energy', 'Kinetic Energy', 'Potential Energy', 'E=0', 'Ini
 #               pyplot.savefig('SolarSystem_energy.png')
 pyplot.figure()
 
-# Plotting Total Energy of the system only, *In SI units)
+# Plot total energy of the system (in SI units)
 
 pyplot.plot(timeInYears, energyInGJList)
 pyplot.title("The total energy of the Solar System as a function of time")
@@ -205,7 +205,7 @@ pyplot.ylabel("Total energy (GJ)")
 # Plot additional horizontal line line showing the initial value of the energy.
 pyplot.figure()
 
-# Plotting orbital separations
+# Plot orbital separations
 CEL.globalApoAndPeriapsesIndexSearch()
 for obj in CEL.objReg:
     if obj.orbitingAround != 'NONE':
