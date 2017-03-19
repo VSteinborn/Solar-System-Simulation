@@ -85,11 +85,11 @@ if len(sys.argv) != 4:
 else:
     trajectory_File_Name = sys.argv[1]
     periAndApo_File_Name = sys.argv[2]
-    outfileName3 = sys.argv[3]
+    periods_File_Name = sys.argv[3]
 # Open output file for writing
 trajectory_File_Handle = open(trajectory_File_Name, "w")
 periAndApo_File_Handle = open(periAndApo_File_Name, "w")
-outfile3 = open(outfileName3, "w")
+periods_File_Handle = open(periods_File_Name, "w")
 
 # Reading Input Files and Initializing Celestial bodies
 # ---------------
@@ -169,6 +169,7 @@ for t in timeArray:
     CEL.globalLeapPosition(dt)
     CEL.globalForceUpdate(G)
     CEL.globalLeapVelocity(dt)
+    #CEL.globalAngle_Check_and_Update(t)
 
 # Data presentation
 # ---------------
@@ -219,6 +220,12 @@ for obj in CEL.objReg:
         for i in obj.perhapsesIndex:
             periAndApo_File_Handle.write(str(timeArray[i]) + "\n")
         periAndApo_File_Handle.write('\n')
+        
+        periods_File_Handle.write("Periods (Earth days): " + obj.P3D.label)
+        periods_File_Handle.write('\n')
+        for i in obj.periodTimes:
+            periods_File_Handle.write(str(timeArray[i]) + "\n")
+        periods_File_Handle.write('\n')
 
         periAndApo_File_Handle.write("Apoapsis Times (days): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
