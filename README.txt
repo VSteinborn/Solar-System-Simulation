@@ -9,6 +9,7 @@ Victor Steinborn: ***REMOVED***
 Tomasz Andrzejewski: ***REMOVED***
 
 particle.txt:
+///////////////////
 The particle.txt file is formatted in the folowing way:
 
 label1 mass1 x1 y1 z1 vx1 vy1 vz1 label_of_Particle_About_Which_Particle1_Orbits
@@ -24,4 +25,12 @@ If a particle does not orbit about another one, then write "NONE"
       -all masses should be given in kg
       -all position coordinates should be in au (astronomical units)
       -all velocity coordinates should be in au/day
+      
+simParameter.txt:
+////////////////////
+The simParameter.txt file is formatted in the folowing way:
+tTotal dt
 
+where:
+tTotal- The total time the simulation should run for (in days)
+dt- Time step of the simulation (in days)
