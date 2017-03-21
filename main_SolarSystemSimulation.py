@@ -64,10 +64,10 @@ tTotal = 6*4*(365.25)
 parameter_File_Handle = open('simParameter.txt','r')
 comp=parameter_File_Handle.split()
 # If a component is zero, then the default is used (the values specified above)
-if comp[0] != 0:
-    tTotal=comp[0]
-if comp[1] != =:
-    dt=comp[1]
+if float(comp[0]) != 0:
+    tTotal=float(comp[0])
+if float(comp[1]) != 0:
+    dt=float(comp[1])
 parameter_File_Handle.close()
 
 # Conversions:
