@@ -226,11 +226,14 @@ CEL.globalPeriodCalculation()
 CEL.globalApoAndPeriapsesIndexSearch()
 for obj in CEL.objReg:
     if obj.orbitingAround != 'NONE':
+        
+
         pyplot.plot(timeInYears, obj.orbitSeparation)
         pyplot.title("Separation of "+ obj.P3D.label +" from the " + obj.orbitingAround + " as a function of time")
         pyplot.xlabel("Time (Years)")
         pyplot.ylabel("Distance (AU)")
 
+        # Write the 
         periAndApo_File_Handle.write("Periapsis Times (days): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
         for i in obj.perhapsesIndex:
@@ -243,6 +246,7 @@ for obj in CEL.objReg:
             periAndApo_File_Handle.write(str(timeArray[i]) + str(obj.orbitSeparation[i]) + "\n")
         periAndApo_File_Handle.write('\n')
         
+        # Write the values of periods for each body and their average to the periods output file.
         periods_File_Handle.write("Periods (days): " + obj.P3D.label)
         periods_File_Handle.write('\n')
         for i in obj.periods:
