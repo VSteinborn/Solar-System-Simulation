@@ -120,9 +120,7 @@ with open("particles.txt", "r") as file_handle:
     for line in file_handle:
         comp = line.split()
         augmentedParticle_File_Handle.write(comp[0] +" "+ str(kilogramsToEarthMass(float(comp[1])))+" ")
-        for i in range(2,5):
-            augmentedParticle_File_Handle.write(comp[i]+" ")
-        for i in range(5,8):
+        for i in range(2,8):
             augmentedParticle_File_Handle.write(comp[i]+" ")
         augmentedParticle_File_Handle.write(str(comp[8]))
         augmentedParticle_File_Handle.write("\n")
@@ -182,7 +180,7 @@ for t in timeArray:
     CEL.globalLeapPosition(dt)
     CEL.globalForceUpdate(G)
     CEL.globalLeapVelocity(dt)
-    #CEL.globalAngle_Check_and_Update(t)
+    CEL.globalAngle_Check_and_Update(t)
 
 # Data presentation
 # ---------------
@@ -224,6 +222,7 @@ for i in range(0,len(energyInGJList)):
     energy_File_Handle.write(str(energyInGJList[i])+"\n")
 
 # Plot orbital separations
+CEL.globalPeriodCalculation()
 CEL.globalApoAndPeriapsesIndexSearch()
 for obj in CEL.objReg:
     if obj.orbitingAround != 'NONE':
@@ -238,16 +237,18 @@ for obj in CEL.objReg:
             periAndApo_File_Handle.write(str(timeArray[i]) +str(obj.orbitSeparation[i])+ "\n")
         periAndApo_File_Handle.write('\n')
         
-        periods_File_Handle.write("Periods (Earth days): " + obj.P3D.label)
-        periods_File_Handle.write('\n')
-        for i in obj.periodTimes:
-            periods_File_Handle.write(str(timeArray[i]) + "\n")
-        periods_File_Handle.write('\n')
-
         periAndApo_File_Handle.write("Apoapsis Times (days): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
         for i in obj.apoapsisIndex:
             periAndApo_File_Handle.write(str(timeArray[i]) + str(obj.orbitSeparation[i]) + "\n")
         periAndApo_File_Handle.write('\n')
+        
+        periods_File_Handle.write("Periods (days): " + obj.P3D.label)
+        periods_File_Handle.write('\n')
+        for i in obj.periods:
+            periods_File_Handle.write(str(i)  + "\n")
+        periods_File_Handle.write("The average period is " + str(obj.averagePeriod)+ "\n")
+        periods_File_Handle.write('\n')
+        
         pyplot.figure()
 pyplot.show()
