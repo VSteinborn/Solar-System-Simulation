@@ -235,7 +235,7 @@ for obj in CEL.objReg:
         periAndApo_File_Handle.write("Periapsis Times (days): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
         for i in obj.perhapsesIndex:
-            periAndApo_File_Handle.write(str(timeArray[i]) + "\n")
+            periAndApo_File_Handle.write(str(timeArray[i]) +str(obj.orbitSeparation[i])+ "\n")
         periAndApo_File_Handle.write('\n')
         
         periods_File_Handle.write("Periods (Earth days): " + obj.P3D.label)
@@ -247,7 +247,7 @@ for obj in CEL.objReg:
         periAndApo_File_Handle.write("Apoapsis Times (days): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
         for i in obj.apoapsisIndex:
-            periAndApo_File_Handle.write(str(timeArray[i]) + "\n")
+            periAndApo_File_Handle.write(str(timeArray[i]) + str(obj.orbitSeparation[i]) + "\n")
         periAndApo_File_Handle.write('\n')
         pyplot.figure()
 pyplot.show()
