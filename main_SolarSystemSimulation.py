@@ -216,8 +216,6 @@ pyplot.plot(timeInYears, energyInGJList)
 pyplot.title("The total energy of the Solar System as a function of time")
 pyplot.xlabel("Time (Years)")
 pyplot.ylabel("Total energy (GJ)")
-# Plot additional horizontal line line showing the initial value of the energy.
-pyplot.axhline(y=energyList[0], color='r', linestyle='dashed')
 pyplot.figure()
 
 # Write energies to the energy output file
