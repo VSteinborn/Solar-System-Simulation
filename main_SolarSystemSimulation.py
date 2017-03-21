@@ -221,9 +221,9 @@ pyplot.axhline(y=energyList[0], color='r', linestyle='dashed')
 pyplot.figure()
 
 # Write energies to the energy output file
-energy_File_Handle.write("Energies of the Solar System in GJ")
+energy_File_Handle.write("Energies of the Solar System in GJ\n")
 for i in range(0,len(energyInGJList)):
-    energy_File_Handle.write(str(energyInGJList[i]))
+    energy_File_Handle.write(str(energyInGJList[i])+"\n")
 
 # Plot orbital separations
 CEL.globalApoAndPeriapsesIndexSearch()
