@@ -222,7 +222,7 @@ pyplot.figure()
 
 # Write energies to the energy output file
 energy_File_Handle.write("Energies of the Solar System in GJ")
-for i in energyInGJList:
+for i in range(0,len(energyInGJList)):
     energy_File_Handle.write(energyInGJList[i])
 
 # Plot orbital separations
