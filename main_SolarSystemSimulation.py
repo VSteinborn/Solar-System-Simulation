@@ -59,6 +59,17 @@ G_Experimental = 6.674e-11
 dt = 1.0
 # Total time of simulation (days) (It is assumed that dt is a factor of tTotal)
 tTotal = 6*4*(365.25)
+
+# Read in the user wants a different dt or tTotal, then they can specify what it should be in a text file.
+parameter_File_Handle = open('simParameter.txt','r')
+comp=parameter_File_Handle.split()
+# If a component is zero, then the default is used (the values specified above)
+if comp[0] != 0:
+    tTotal=comp[0]
+if comp[1] != =:
+    dt=comp[1]
+parameter_File_Handle.close()
+
 # Conversions:
 Meters_In_AU = 149597870700.0
 Kilograms_In_EarthMass = 5.972e24
