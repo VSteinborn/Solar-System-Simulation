@@ -88,20 +88,22 @@ def daysToYears(days): return days * Seconds_In_Day / Seconds_In_Year
 # ---------------
 
 # Read name of 4 output files from command line: trajectory, energy, extrema and periods
-if len(sys.argv) != 4:
+if len(sys.argv) != 5:
     print    "Wrong number of arguments."
     print    "Usage: " + sys.argv[
-        0] + " <trajectory output file>" + " <extrema output file>" + " <periods output file>"
+        0] + " <trajectory output file>" + " <extrema output file>" + " <periods output file>"+ " <energy output file>"
     quit()
 else:
     trajectory_File_Name = sys.argv[1]
     periAndApo_File_Name = sys.argv[2]
     periods_File_Name = sys.argv[3]
+    energy_File_Name = sys.argv[4]
+    
 # Open output file for writing
 trajectory_File_Handle = open(trajectory_File_Name, "w")
 periAndApo_File_Handle = open(periAndApo_File_Name, "w")
 periods_File_Handle = open(periods_File_Name, "w")
-
+energy_File_Handle = open(energy_File_Name, "w")
 # Reading Input Files and Initializing Celestial bodies
 # ---------------
 
@@ -215,7 +217,13 @@ pyplot.title("The total energy of the Solar System as a function of time")
 pyplot.xlabel("Time (Years)")
 pyplot.ylabel("Total energy (GJ)")
 # Plot additional horizontal line line showing the initial value of the energy.
+pyplot.axhline(y=energyList[0], color='r', linestyle='dashed')
 pyplot.figure()
+
+# Write energies to the energy output file
+energy_File_Handle.write("Energies of the Solar System in GJ")
+for i in energyInGJList:
+    energy_File_Handle.write(energyInGJList[i])
 
 # Plot orbital separations
 CEL.globalApoAndPeriapsesIndexSearch()
