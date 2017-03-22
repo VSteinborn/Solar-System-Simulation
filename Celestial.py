@@ -242,38 +242,41 @@ class Celestial (object):
     def globalOrbitSeparationUpdate():
         for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
-                obj.orbitSeparation = np.append( obj.orbitSeparation, np.linalg.norm( obj.orbitVec_History[-1])) # 
+                # Appends the separation each time it calculates to a numpy array
+                obj.orbitSeparation = np.append( obj.orbitSeparation, np.linalg.norm( obj.orbitVec_History[-1]))
                 
-    # Determines the apoapsis and periapsis of each orbiting object
+    # Determines the times at which apsides (both periapsides and apoapsides) occur of each orbiting object
     @staticmethod
-    def globalApoAndPeriapsesIndexSearch():
+    def globalApsidesIndexSearch():
         for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
                 # Periapsis (Closest)
-                perhapsesIndexTuple = argrelextrema(obj.orbitSeparation, np.less) # 
-                obj.perhapsesIndex = perhapsesIndexTuple[0].tolist()
+                periapsisIndexTuple = argrelextrema(obj.orbitSeparation, np.less) # determine the mininimum separation 
+                obj.periapsisIndex = periapsisIndexTuple[0].tolist() # convert the tuple to a list
                 # Apoapsis (Furthest)
-                apoapsisIndexTuple = argrelextrema(obj.orbitSeparation, np.greater) #
+                apoapsisIndexTuple = argrelextrema(obj.orbitSeparation, np.greater) # determine the maximum separation
                 obj.apoapsisIndex = apoapsisIndexTuple[0].tolist()
 
     # Determines times at which one full period is made and stores them in the list.
     @staticmethod   
     def globalAngle_Check_and_Update(t):
-        # Returns the unit vector of the vector
+        # Return the unit vector of the vector
         def unit_vector(vector):
             norm = np.linalg.norm(vector)
             if norm==0:
                 return vector
             else:
                 return vector / norm
-        # Returns the angle in radians between vectors 'v1' and 'v2'
+        # Return the angle in radians between vectors 'v1' and 'v2'
         def angle_between(v1, v2):
             v1_u = unit_vector(v1)
             v2_u = unit_vector(v2)
             return np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))
+        # For all orbiting objects compute the angle between two latest position vectors.
+        # Then sum the computed angles until full angle is obtained at which point start again from a 0-angle. 
         for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
-                deltaAngle =angle_between(obj.orbitVec_History[-1], obj.orbitVec_History[-2]) # 
+                deltaAngle =angle_between(obj.orbitVec_History[-1], obj.orbitVec_History[-2])
                 obj.angle = obj.angle + deltaAngle
                 if obj.angle >= 2*math.pi:
                     obj.angle = 0.0
@@ -287,11 +290,13 @@ class Celestial (object):
             if obj.orbitingAround != 'NONE':
                 if len(obj.periodTimes)!=0:
                     for i in range (0,len(obj.periodTimes)):
-                        if i==0:
+                        if i==0: # 1st entry to periodTimes list gives a value of orbital period
                             period = obj.periodTimes[i]
                             obj.periods = obj.periods + [period]
-                        else:
+                        # To obtain the orbital period length from other entries in periodTimes 
+                        # we need to take difference of a consecutive pair
+                        else: 
                             period = obj.periodTimes[i] - obj.periodTimes[i-1]
-                            obj.periods = obj.periods + [period] # 
-                        obj.averagePeriod = np.mean(obj.periods) #
+                            obj.periods = obj.periods + [period]
+                        obj.averagePeriod = np.mean(obj.periods) # calculate the average period
               
