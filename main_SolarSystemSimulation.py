@@ -1,4 +1,4 @@
-"""
+""
 Solar System Simulation
 ////////////////////////
 
@@ -29,9 +29,43 @@ with given initial conditions.
 To run the program, names of 4 output files must be written to the command line.
 These 4 output files hold respectively data for:
 trajectory
+apoapsides and periapsides, output of globalApoAndPeriapsesIndexSearch() method.
+orbital period lengths, output of globalPeriodCalculation() method
 energy
-apoapsides and periapsides output extremaCheck() method.
-orbital period lengths periodCalculations() method
+
+The program also requires two input files:
+particle.txt - holds data for a number of bodies (their masses, initial positions and velocities and body that they orbit)
+simParameter.txt - holds simulation parameters (total time to run the simulation and timestep)
+
+They're formatted as follows: 
+
+particle.txt:
+///////////////////
+The particle.txt file is formatted in the folowing way:
+
+label1 mass1 x1 y1 z1 vx1 vy1 vz1 label_of_Particle_About_Which_Particle1_Orbits
+label2 mass2 x2 y2 z2 vx2 vy2 vz2 label_of_Particle_About_Which_Particle2_Orbits
+.
+.
+.
+
+If a particle does not orbit about another one, then write "NONE"
+
+  Units:
+  - for particle.txt:
+      -all masses should be given in kg
+      -all position coordinates should be in au (astronomical units)
+      -all velocity coordinates should be in au/day
+      
+simParameter.txt:
+////////////////////
+The simParameter.txt file is formatted in the folowing way:
+tTotal dt
+
+where:
+tTotal- The total time the simulation should run for (in days)
+dt- Time step of the simulation (in days)
+
 
 Current Assumptions:
 -----------------
@@ -62,7 +96,8 @@ tTotal = 6*4*(365.25)
 
 # Read in the user wants a different dt or tTotal, then they can specify what it should be in a text file.
 parameter_File_Handle = open('simParameter.txt','r')
-comp=parameter_File_Handle.split()
+for line in parameter_File_Handle:
+    comp=line.split()
 # If a component is zero, then the default is used (the values specified above)
 if float(comp[0]) != 0:
     tTotal=float(comp[0])
@@ -205,7 +240,6 @@ pyplot.axhline(y=0, color='b', linestyle='dashed')
 pyplot.axhline(y=energyList[0], color='r', linestyle='dashed')
 
 pyplot.legend(['Total Energy', 'Kinetic Energy', 'Potential Energy', 'E=0', 'Initial Total Energy'], loc='upper right')
-#               pyplot.savefig('SolarSystem_energy.png')
 pyplot.figure()
 
 # Plot total energy of the system (in SI units)
@@ -221,29 +255,30 @@ energy_File_Handle.write("Energies of the Solar System in GJ\n")
 for i in range(0,len(energyInGJList)):
     energy_File_Handle.write(str(energyInGJList[i])+"\n")
 
-# Plot orbital separations
-CEL.globalPeriodCalculation()
-CEL.globalApoAndPeriapsesIndexSearch()
+
+CEL.globalPeriodCalculation() # Calculate the periods of the bodies 
+CEL.globalApoAndPeriapsesIndexSearch() # Calculate the apsides of the bodies
 for obj in CEL.objReg:
     if obj.orbitingAround != 'NONE':
         
-
+        # Plot orbital separations
         pyplot.plot(timeInYears, obj.orbitSeparation)
         pyplot.title("Separation of "+ obj.P3D.label +" from the " + obj.orbitingAround + " as a function of time")
         pyplot.xlabel("Time (Years)")
         pyplot.ylabel("Distance (AU)")
 
-        # Write the 
+        # Write the the values of periapsides into the extrema output file.
         periAndApo_File_Handle.write("Periapsis Times (days): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
         for i in obj.perhapsesIndex:
-            periAndApo_File_Handle.write(str(timeArray[i]) +str(obj.orbitSeparation[i])+ "\n")
+            periAndApo_File_Handle.write(str(timeArray[i]) + " " +str(obj.orbitSeparation[i])+ "\n")
         periAndApo_File_Handle.write('\n')
-        
+
+        # Write the the values of apoapsides into the extrema output file.
         periAndApo_File_Handle.write("Apoapsis Times (days): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
         for i in obj.apoapsisIndex:
-            periAndApo_File_Handle.write(str(timeArray[i]) + str(obj.orbitSeparation[i]) + "\n")
+            periAndApo_File_Handle.write(str(timeArray[i]) +" "+ str(obj.orbitSeparation[i]) + "\n")
         periAndApo_File_Handle.write('\n')
         
         # Write the values of periods for each body and their average to the periods output file.
