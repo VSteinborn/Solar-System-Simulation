@@ -29,7 +29,7 @@ with given initial conditions.
 To run the program, names of 4 output files must be written to the command line.
 These 4 output files hold respectively data for:
 trajectory
-apoapsides and periapsides, output of globalApoAndPeriapsesIndexSearch() method.
+apoapsides and periapsides, output of globalApsidesIndexSearch() method.
 orbital period lengths, output of globalPeriodCalculation() method
 energy
 
@@ -257,7 +257,7 @@ for i in range(0,len(energyInGJList)):
 
 # Plot orbital separations and write data to output files for each orbiting body 
 CEL.globalPeriodCalculation() # Calculate the periods of the bodies 
-CEL.globalApoAndPeriapsesIndexSearch() # Calculate the apsides of the bodies
+CEL.globalApsidesIndexSearch() # Calculate the apsides of the bodies
 for obj in CEL.objReg:
     if obj.orbitingAround != 'NONE':
         
@@ -270,7 +270,7 @@ for obj in CEL.objReg:
         # Write the times at which periapsides occur and the values of periapsides into the extrema output file.
         periAndApo_File_Handle.write("Periapsis Times (days): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
-        for i in obj.periapsesIndex:
+        for i in obj.periapsisIndex:
             periAndApo_File_Handle.write(str(timeArray[i]) + " " +str(obj.orbitSeparation[i])+ "\n")
         periAndApo_File_Handle.write('\n')
 
