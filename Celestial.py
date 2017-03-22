@@ -246,7 +246,7 @@ class Celestial (object):
                 
     # Determines the apoapsis and periapsis of each orbiting object
     @staticmethod
-    def globalApoAndPeriapsesIndexSearch():
+    def globalApsidesIndexSearch():
         for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
                 # Periapsis (Closest)
