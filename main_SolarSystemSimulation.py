@@ -255,7 +255,7 @@ energy_File_Handle.write("Energies of the Solar System in GJ\n")
 for i in range(0,len(energyInGJList)):
     energy_File_Handle.write(str(energyInGJList[i])+"\n")
 
-
+# Plot orbital separations and write data to output files for each orbiting body 
 CEL.globalPeriodCalculation() # Calculate the periods of the bodies 
 CEL.globalApoAndPeriapsesIndexSearch() # Calculate the apsides of the bodies
 for obj in CEL.objReg:
@@ -267,14 +267,14 @@ for obj in CEL.objReg:
         pyplot.xlabel("Time (Years)")
         pyplot.ylabel("Distance (AU)")
 
-        # Write the the values of periapsides into the extrema output file.
+        # Write the times at which periapsides occur and the values of periapsides into the extrema output file.
         periAndApo_File_Handle.write("Periapsis Times (days): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
-        for i in obj.perhapsesIndex:
+        for i in obj.periapsesIndex:
             periAndApo_File_Handle.write(str(timeArray[i]) + " " +str(obj.orbitSeparation[i])+ "\n")
         periAndApo_File_Handle.write('\n')
 
-        # Write the the values of apoapsides into the extrema output file.
+        # Write the times at which apoapsides occur and the values of apoapsides into the extrema output file.
         periAndApo_File_Handle.write("Apoapsis Times (days): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
         for i in obj.apoapsisIndex:
