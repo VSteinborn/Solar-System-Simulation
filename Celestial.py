@@ -64,7 +64,7 @@ class Celestial (object):
         self.centralObj = 0
         self.orbitVec_History = np.array([0,0,0])
         self.orbitSeparation = np.array([])
-        self.perhapsesIndex=[]
+        self.periapsisIndex=[]
         self.apoapsisIndex=[]
         self.periodTimes = []
         self.periods = []
@@ -250,8 +250,8 @@ class Celestial (object):
         for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
                 # Periapsis (Closest)
-                perhapsesIndexTuple = argrelextrema(obj.orbitSeparation, np.less)
-                obj.perhapsesIndex = perhapsesIndexTuple[0].tolist()
+                periapsisIndexTuple = argrelextrema(obj.orbitSeparation, np.less)
+                obj.periapsisIndex = periapsisIndexTuple[0].tolist()
                 # Apoapsis (Furthest)
                 apoapsisIndexTuple = argrelextrema(obj.orbitSeparation, np.greater)
                 obj.apoapsisIndex = apoapsisIndexTuple[0].tolist()
