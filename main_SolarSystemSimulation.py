@@ -212,10 +212,10 @@ for t in timeArray:
 
     # Dynamics
     # ---------------
-    CEL.globalLeapPosition(dt) # 
-    CEL.globalForceUpdate(G) # 
-    CEL.globalLeapVelocity(dt) # 
-    CEL.globalAngle_Check_and_Update(t) #
+    CEL.globalLeapPosition(dt) # Updates the positions of all bodies
+    CEL.globalForceUpdate(G) # Updates the net forces acting on each body
+    CEL.globalLeapVelocity(dt) # Updates the velocities of all bodies
+    CEL.globalAngle_Check_and_Update(t) # Determines times corresponding to completing a full period by each orbiting object 
 
 # Data presentation
 # ---------------
@@ -234,7 +234,7 @@ for i in range(0,len(energyInGJList)):
 
 
 CEL.globalPeriodCalculation() # Calculate the periods of the bodies 
-CEL.globalApoAndPeriapsesIndexSearch() # Calculate the apsides of the bodies
+CEL.globalApsidesIndexSearch() # Determine the times at which apsides occur
 for obj in CEL.objReg:
     if obj.orbitingAround != 'NONE':
         
@@ -247,7 +247,7 @@ for obj in CEL.objReg:
         # Write the the values of periapsides into the extrema output file.
         periAndApo_File_Handle.write("Periapsis Times (days): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
-        for i in obj.perhapsesIndex:
+        for i in obj.periapsisIndex:
             periAndApo_File_Handle.write(str(timeArray[i]) + " " +str(obj.orbitSeparation[i])+ "\n")
         periAndApo_File_Handle.write('\n')
 
