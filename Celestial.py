@@ -64,7 +64,7 @@ class Celestial (object):
         self.centralObj = 0
         self.orbitVec_History = np.array([0,0,0])
         self.orbitSeparation = np.array([])
-        self.periapsisIndex=[]
+        self.perhapsesIndex=[]
         self.apoapsisIndex=[]
         self.periodTimes = []
         self.periods = []
@@ -242,18 +242,18 @@ class Celestial (object):
     def globalOrbitSeparationUpdate():
         for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
-                obj.orbitSeparation = np.append( obj.orbitSeparation, np.linalg.norm( obj.orbitVec_History[-1]))
+                obj.orbitSeparation = np.append( obj.orbitSeparation, np.linalg.norm( obj.orbitVec_History[-1])) # 
                 
     # Determines the apoapsis and periapsis of each orbiting object
     @staticmethod
-    def globalApsidesIndexSearch():
+    def globalApoAndPeriapsesIndexSearch():
         for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
                 # Periapsis (Closest)
-                periapsisIndexTuple = argrelextrema(obj.orbitSeparation, np.less)
-                obj.periapsisIndex = periapsisIndexTuple[0].tolist()
+                perhapsesIndexTuple = argrelextrema(obj.orbitSeparation, np.less) # 
+                obj.perhapsesIndex = perhapsesIndexTuple[0].tolist()
                 # Apoapsis (Furthest)
-                apoapsisIndexTuple = argrelextrema(obj.orbitSeparation, np.greater)
+                apoapsisIndexTuple = argrelextrema(obj.orbitSeparation, np.greater) #
                 obj.apoapsisIndex = apoapsisIndexTuple[0].tolist()
 
     # Determines times at which one full period is made and stores them in the list.
@@ -273,7 +273,7 @@ class Celestial (object):
             return np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))
         for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
-                deltaAngle =angle_between(obj.orbitVec_History[-1], obj.orbitVec_History[-2])
+                deltaAngle =angle_between(obj.orbitVec_History[-1], obj.orbitVec_History[-2]) # 
                 obj.angle = obj.angle + deltaAngle
                 if obj.angle >= 2*math.pi:
                     obj.angle = 0.0
@@ -289,8 +289,9 @@ class Celestial (object):
                     for i in range (0,len(obj.periodTimes)):
                         if i==0:
                             period = obj.periodTimes[i]
+                            obj.periods = obj.periods + [period]
                         else:
-                            period = obj.periodTimes[i] -obj.periodTimes[i-1]
-                    obj.periods = obj.periods + [period]
-                    obj.averagePeriod = np.mean(obj.periods)
-        
+                            period = obj.periodTimes[i] - obj.periodTimes[i-1]
+                            obj.periods = obj.periods + [period] # 
+                        obj.averagePeriod = np.mean(obj.periods) #
+              
