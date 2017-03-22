@@ -66,8 +66,6 @@ class Celestial (object):
         self.orbitSeparation = np.array([])
         self.perhapsesIndex=[]
         self.apoapsisIndex=[]
-
-
         self.periodTimes = []
         self.periods = []
         self.angle = 0.0
@@ -287,7 +285,6 @@ class Celestial (object):
     def globalPeriodCalculation():
          for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
-                print len(obj.periodTimes)
                 if len(obj.periodTimes)!=0:
                     for i in range (0,len(obj.periodTimes)):
                         if i==0:
