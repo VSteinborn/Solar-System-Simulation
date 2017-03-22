@@ -29,7 +29,7 @@ with given initial conditions.
 To run the program, names of 4 output files must be written to the command line.
 These 4 output files hold respectively data for:
 trajectory
-apoapsides and periapsides, output of globalApsidesIndexSearch() method.
+apoapsides and periapsides, output of globalApoAndPeriapsesIndexSearch() method.
 orbital period lengths, output of globalPeriodCalculation() method
 energy
 
@@ -203,7 +203,7 @@ timeArray=np.arange(0, tTotal + dt, dt) # returns an array of evenly spaced time
 for t in timeArray:
     # Data
     # ---------------
-    CEL.globalPositionPrint_XYZ(trajectory_File_Handle, t)
+    CEL.globalPositionPrint_XYZ(trajectory_File_Handle, t) # 
     potentialEnergyList.append( CEL.totalPotentialEnergy(G))
     kineticEnergyList.append( CEL.totalKineticEnergy())
     energyList.append( potentialEnergyList[-1] + kineticEnergyList[-1])
@@ -212,10 +212,10 @@ for t in timeArray:
 
     # Dynamics
     # ---------------
-    CEL.globalLeapPosition(dt)
-    CEL.globalForceUpdate(G)
-    CEL.globalLeapVelocity(dt)
-    CEL.globalAngle_Check_and_Update(t)
+    CEL.globalLeapPosition(dt) # 
+    CEL.globalForceUpdate(G) # 
+    CEL.globalLeapVelocity(dt) # 
+    CEL.globalAngle_Check_and_Update(t) #
 
 # Data presentation
 # ---------------
@@ -226,6 +226,53 @@ keInGJList = [simulationEnergyToGJ(x) for x in kineticEnergyList]
 peInGJList = [simulationEnergyToGJ(x) for x in potentialEnergyList]
 # Convert Times to (Julian) Years
 timeInYears = [daysToYears(t) for t in np.arange(0, tTotal +dt , dt)]
+
+# Write energies to the energy output file
+energy_File_Handle.write("Energies of the Solar System in GJ\n")
+for i in range(0,len(energyInGJList)):
+    energy_File_Handle.write(str(energyInGJList[i])+"\n")
+
+
+CEL.globalPeriodCalculation() # Calculate the periods of the bodies 
+CEL.globalApoAndPeriapsesIndexSearch() # Calculate the apsides of the bodies
+for obj in CEL.objReg:
+    if obj.orbitingAround != 'NONE':
+        
+        # Plot orbital separations
+        pyplot.plot(timeInYears, obj.orbitSeparation)
+        pyplot.title("Separation of "+ obj.P3D.label +" from the " + obj.orbitingAround + " as a function of time")
+        pyplot.xlabel("Time (Years)")
+        pyplot.ylabel("Distance (AU)")
+
+        # Write the the values of periapsides into the extrema output file.
+        periAndApo_File_Handle.write("Periapsis Times (days): " + obj.P3D.label)
+        periAndApo_File_Handle.write('\n')
+        for i in obj.perhapsesIndex:
+            periAndApo_File_Handle.write(str(timeArray[i]) + " " +str(obj.orbitSeparation[i])+ "\n")
+        periAndApo_File_Handle.write('\n')
+
+        # Write the the values of apoapsides into the extrema output file.
+        periAndApo_File_Handle.write("Apoapsis Times (days): " + obj.P3D.label)
+        periAndApo_File_Handle.write('\n')
+        for i in obj.apoapsisIndex:
+            periAndApo_File_Handle.write(str(timeArray[i]) +" "+ str(obj.orbitSeparation[i]) + "\n")
+        periAndApo_File_Handle.write('\n')
+        
+        # Write the values of periods for each body and their average to the periods output file.
+        periods_File_Handle.write("Periods (days): " + obj.P3D.label)
+        periods_File_Handle.write('\n')
+        if len(obj.periods) !=0 :
+            for i in obj.periods:
+                periods_File_Handle.write(str(i)  + "\n")
+            periods_File_Handle.write("The average period is " + str(obj.averagePeriod)+ "\n")
+            periods_File_Handle.write("Since the last completed period the object  went through the additional angle of " + str(obj.angle)+ " radians" + "\n")
+            periods_File_Handle.write('\n')
+        else:
+            periods_File_Handle.write("The object did not complete the full period and it went through the angle of " + str(obj.angle)+ " radians" + "\n")
+            periods_File_Handle.write('\n')
+        
+        pyplot.figure()
+
 
 # Plot energies (KE,PE and total) of the system (in SI units)
 pyplot.plot(timeInYears, energyInGJList)
@@ -248,46 +295,4 @@ pyplot.plot(timeInYears, energyInGJList)
 pyplot.title("The total energy of the Solar System as a function of time")
 pyplot.xlabel("Time (Years)")
 pyplot.ylabel("Total energy (GJ)")
-pyplot.figure()
-
-# Write energies to the energy output file
-energy_File_Handle.write("Energies of the Solar System in GJ\n")
-for i in range(0,len(energyInGJList)):
-    energy_File_Handle.write(str(energyInGJList[i])+"\n")
-
-# Plot orbital separations and write data to output files for each orbiting body 
-CEL.globalPeriodCalculation() # Calculate the periods of the bodies 
-CEL.globalApsidesIndexSearch() # Calculate the apsides of the bodies
-for obj in CEL.objReg:
-    if obj.orbitingAround != 'NONE':
-        
-        # Plot orbital separations
-        pyplot.plot(timeInYears, obj.orbitSeparation)
-        pyplot.title("Separation of "+ obj.P3D.label +" from the " + obj.orbitingAround + " as a function of time")
-        pyplot.xlabel("Time (Years)")
-        pyplot.ylabel("Distance (AU)")
-
-        # Write the times at which periapsides occur and the values of periapsides into the extrema output file.
-        periAndApo_File_Handle.write("Periapsis Times (days/separations from central body): " + obj.P3D.label)
-        periAndApo_File_Handle.write('\n')
-        for i in obj.periapsisIndex:
-            periAndApo_File_Handle.write(str(timeArray[i]) + "   " +str(obj.orbitSeparation[i])+ "\n")
-        periAndApo_File_Handle.write('\n')
-
-        # Write the times at which apoapsides occur and the values of apoapsides into the extrema output file.
-        periAndApo_File_Handle.write("Apoapsis Times (days/separations from central body): " + obj.P3D.label)
-        periAndApo_File_Handle.write('\n')
-        for i in obj.apoapsisIndex:
-            periAndApo_File_Handle.write(str(timeArray[i]) +"   "+ str(obj.orbitSeparation[i]) + "\n")
-        periAndApo_File_Handle.write('\n')
-        
-        # Write the values of periods for each body and their average to the periods output file.
-        periods_File_Handle.write("Periods (days): " + obj.P3D.label)
-        periods_File_Handle.write('\n')
-        for i in obj.periods:
-            periods_File_Handle.write(str(i)  + "\n")
-        periods_File_Handle.write("The average period is " + str(obj.averagePeriod)+ "\n")
-        periods_File_Handle.write('\n')
-        
-        pyplot.figure()
 pyplot.show()
