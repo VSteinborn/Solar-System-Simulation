@@ -268,17 +268,17 @@ for obj in CEL.objReg:
         pyplot.ylabel("Distance (AU)")
 
         # Write the times at which periapsides occur and the values of periapsides into the extrema output file.
-        periAndApo_File_Handle.write("Periapsis Times (days): " + obj.P3D.label)
+        periAndApo_File_Handle.write("Periapsis Times (days/separations from central body): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
         for i in obj.periapsisIndex:
-            periAndApo_File_Handle.write(str(timeArray[i]) + " " +str(obj.orbitSeparation[i])+ "\n")
+            periAndApo_File_Handle.write(str(timeArray[i]) + "   " +str(obj.orbitSeparation[i])+ "\n")
         periAndApo_File_Handle.write('\n')
 
         # Write the times at which apoapsides occur and the values of apoapsides into the extrema output file.
-        periAndApo_File_Handle.write("Apoapsis Times (days): " + obj.P3D.label)
+        periAndApo_File_Handle.write("Apoapsis Times (days/separations from central body): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
         for i in obj.apoapsisIndex:
-            periAndApo_File_Handle.write(str(timeArray[i]) +" "+ str(obj.orbitSeparation[i]) + "\n")
+            periAndApo_File_Handle.write(str(timeArray[i]) +"   "+ str(obj.orbitSeparation[i]) + "\n")
         periAndApo_File_Handle.write('\n')
         
         # Write the values of periods for each body and their average to the periods output file.
