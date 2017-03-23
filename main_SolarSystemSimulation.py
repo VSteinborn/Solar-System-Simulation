@@ -15,9 +15,8 @@ Assignment:
     Project A: Solar System
 
 *****************
-Log:
+Created file:
     10.02.2017
--VS: Created file
 -----------------
 This file contains the main script that is used to simulate the Solar System, using Velocity Verlet time integration techniques.
 
