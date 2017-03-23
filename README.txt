@@ -24,7 +24,7 @@ labeli: label of the particle (ie. "Sun")
 massi: mass of the particle
 xi, yi, zi: x y and z position coordinates of the particle respectively
 vxi, vyi, vzi: x y and z velocity components of the particle respectively
-label_of_Particle_About_Which_Particlei_Orbits: string label of particle about which particle i orbits
+label_of_Particle_About_Which_Particlei_Orbits: string label of particle about which particle i orbits (ie. Earth for the Moon)
 
 (!)If a particle does not orbit about another one, then write "NONE" for label_of_Particle_aboutWiich_Pariclei_Orbits
 
