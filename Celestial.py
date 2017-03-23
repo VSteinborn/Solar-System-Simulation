@@ -287,8 +287,6 @@ class Celestial (object):
                         if i==0: # 1st entry to periodTimes list gives a value of orbital period
                             period = obj.periodTimes[i]
                             obj.periods = obj.periods + [period]
-                        # To obtain the orbital period length from other entries in periodTimes 
-                        # we need to take difference of a consecutive pair
                         else: # For the other entries
                             period = obj.periodTimes[i] - obj.periodTimes[i-1] # Take difference between the times periods occour to obtain orbital period.
                             obj.periods = obj.periods + [period]
