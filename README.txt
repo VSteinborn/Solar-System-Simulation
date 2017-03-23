@@ -1,6 +1,6 @@
 # Solar-System-Simulation
 
-Simulation of Solar System using velocity verlet time integration techniques
+Simulation of Solar System using velocity verlet time integration techniques and a Newtonian gravitational model.
 
 By: Tomasz Andrzejewski and Victor Steinborn
 
@@ -18,19 +18,32 @@ label2 mass2 x2 y2 z2 vx2 vy2 vz2 label_of_Particle_About_Which_Particle2_Orbits
 .
 .
 
-If a particle does not orbit about another one, then write "NONE"
+where for the ith particle:
+
+labeli: label of the particle (ie. "Sun")
+massi: mass of the particle
+xi, yi, zi: x y and z position coordinates of the particle respectively
+vxi, vyi, vzi: x y and z velocity components of the particle respectively
+label_of_Particle_About_Which_Particlei_Orbits: string label of particle about which particle i orbits
+
+(!)If a particle does not orbit about another one, then write "NONE" for label_of_Particle_aboutWiich_Pariclei_Orbits
 
   Units:
   - for particle.txt:
       -all masses should be given in kg
       -all position coordinates should be in au (astronomical units)
       -all velocity coordinates should be in au/day
-      
+  - The simulation will run using Au, days and earth masses
+  
+It is assumed that the gravitational constant is (exactly):
+G=6.674e-11 m^3 kg^-1 s^-2
+
 simParameter.txt:
 ////////////////////
 The simParameter.txt file is formatted in the folowing way:
+
 tTotal dt
 
 where:
-tTotal- The total time the simulation should run for (in days)
-dt- Time step of the simulation (in days)
+tTotal: The total time the simulation should run for (in days)
+dt: Time step of the simulation (in days)
