@@ -15,61 +15,11 @@ Assignment:
     Project A: Solar System
 
 *****************
-Created file:
-    10.02.2017
------------------
-This file contains the main script that is used to simulate the Solar System, using Velocity Verlet time integration techniques.
 
-
-This file contains the main program that simulates the evolution of the system consisting of an arbitrary number of particles using the velocity Verlet time integration
-algorithm, as a function of time in an external potential,
-with given initial conditions.
-
-To run the program, names of 4 output files must be written to the command line.
-These 4 output files hold respectively data for:
-trajectory
-apoapsides and periapsides, output of globalApoAndPeriapsesIndexSearch() method.
-orbital period lengths, output of globalPeriodCalculation() method
-energy
-
-The program also requires two input files:
-particle.txt - holds data for a number of bodies (their masses, initial positions and velocities and body that they orbit)
-simParameter.txt - holds simulation parameters (total time to run the simulation and timestep)
-
-They're formatted as follows: 
-
-particle.txt:
-///////////////////
-The particle.txt file is formatted in the folowing way:
-
-label1 mass1 x1 y1 z1 vx1 vy1 vz1 label_of_Particle_About_Which_Particle1_Orbits
-label2 mass2 x2 y2 z2 vx2 vy2 vz2 label_of_Particle_About_Which_Particle2_Orbits
-.
-.
-.
-
-If a particle does not orbit about another one, then write "NONE"
-
-  Units:
-  - for particle.txt:
-      -all masses should be given in kg
-      -all position coordinates should be in au (astronomical units)
-      -all velocity coordinates should be in au/day
-      
-simParameter.txt:
-////////////////////
-The simParameter.txt file is formatted in the folowing way:
-tTotal dt
-
-where:
-tTotal- The total time the simulation should run for (in days)
-dt- Time step of the simulation (in days)
-
-
-Current Assumptions:
+Assumptions:
 -----------------
 -The distance between two bodies will never be less than or equal to the sum of their radii. (point particle treatment)
--The orbital period is the amount of time it takes for the particle to complete an orbit about the central particle.
+-The orbital period is the amount of time it takes for the particle to complete a revolution about the central particle.
 
 """
 
