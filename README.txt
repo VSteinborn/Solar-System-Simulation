@@ -13,7 +13,7 @@ Tomasz Andrzejewski: ***REMOVED***
 How to execute the program:
 ////////////////////
 To execute the program, type in terminal:
-python main_solarSystemSimulation <trajectory output file> <extrema output file> <periods output file> <energy output file>
+python main_solarSystemSimulation.py <trajectory output file> <extrema output file> <periods output file> <energy output file>
 
 where the output file names can be specified by the user in the command line.
 
