@@ -272,7 +272,7 @@ class Celestial (object):
             if obj.orbitingAround != 'NONE':
                 deltaAngle =angle_between(obj.orbitVec_History[-1], obj.orbitVec_History[-2])
                 obj.angle = obj.angle + deltaAngle
-                if obj.angle >= 2*math.pi:
+                if obj.angle >= 2*math.pi: # If an orbit is complete, save the time where the orbit is completed
                     obj.angle = 0.0
                     obj.periodTimes = obj.periodTimes + [t]
                     
@@ -289,8 +289,8 @@ class Celestial (object):
                             obj.periods = obj.periods + [period]
                         # To obtain the orbital period length from other entries in periodTimes 
                         # we need to take difference of a consecutive pair
-                        else: 
-                            period = obj.periodTimes[i] - obj.periodTimes[i-1]
+                        else: # For the other entries
+                            period = obj.periodTimes[i] - obj.periodTimes[i-1] # Take difference between the times periods occour to obtain orbital period.
                             obj.periods = obj.periods + [period]
                         obj.averagePeriod = np.mean(obj.periods) # calculate the average period
               
