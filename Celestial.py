@@ -213,7 +213,7 @@ class Celestial (object):
     @staticmethod
     def globalOrbitPosVecUpdate_Initialization():
         for obj in Celestial.objReg:
-            if obj.orbitingAround != 'NONE':
+            if obj.orbitingAround != 'NONE': # Select only orbiting bodies
                 fromCentre = P3D.vector_position_wrt(obj.P3D, obj.centralObj.P3D)
                 obj.orbitVec_History = fromCentre
                 
