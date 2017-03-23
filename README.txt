@@ -1,6 +1,8 @@
 # Solar-System-Simulation
 
-Simulation of Solar System using velocity verlet time integration techniques and a Newtonian gravitational model.
+Simulation of Solar System using velocity verlet time integration techniques and a classical Newtonian gravitational model.
+
+Only gravitational interactions are considered between the simulated particles of interest.
 
 By: Tomasz Andrzejewski and Victor Steinborn
 
@@ -14,6 +16,9 @@ To execute the program, type in terminal:
 python main_solarSystemSimulation <trajectory output file> <extrema output file> <periods output file> <energy output file>
 
 where the output file names can be specified by the user in the command line.
+
+For how long the simulation should run for, and with what time step can be determined by the user in simParameter.txt.
+The particles of interest that should be simulated can be specified by the user in particle.txt
 
 particle.txt:
 ///////////////////
