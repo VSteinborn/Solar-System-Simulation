@@ -272,7 +272,7 @@ class Celestial (object):
             if obj.orbitingAround != 'NONE':
                 deltaAngle =angle_between(obj.orbitVec_History[-1], obj.orbitVec_History[-2])
                 obj.angle = obj.angle + deltaAngle
-                if obj.angle >= 2*math.pi: # If an orbit is complete, save the time where the orbit is completed
+                if obj.angle >= 2*math.pi: # If an orbit is complete, save the time where the orbit is completed to periodTimes
                     obj.angle = 0.0
                     obj.periodTimes = obj.periodTimes + [t]
                     
