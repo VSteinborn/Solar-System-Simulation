@@ -38,7 +38,7 @@ from scipy.signal import argrelextrema
 # ----------------
 class Celestial (object):
 
-    # Initialise registrar list for all existing Celestial instances
+    # Initialise a class level list for all existing Celestial instances
     objReg=[]
 
     # Arguments / Properties for _init_():
@@ -57,19 +57,25 @@ class Celestial (object):
         # Register the instance in the Celestial Registrar
         Celestial.objReg.append(self)
 
-        # Assign the relevant values of the variables to the instance
-        self.P3D = P3D
-        self.force_History = np.array([0,0,0])
-        self.orbitingAround = orbitingAround
-        self.centralObj = 0
-        self.orbitVec_History = np.array([0,0,0])
-        self.orbitSeparation = np.array([])
-        self.perhapsesIndex=[]
-        self.apoapsisIndex=[]
-        self.periodTimes = []
-        self.periods = []
-        self.angle = 0.0
-        self.averagePeriod = 0.0
+        # Assign the relevant values of the variables to the instance 
+        # (some objects will not use all variables, and are there as placeholders
+        
+        # For the dynamics of the particles involved:
+        self.P3D = P3D # Each instance has a P3D object associated with it
+        self.force_History = np.array([0,0,0]) # The forces that act on the particle at each time step will be saved in this array
+        # For determining which body orbits about each other:
+        self.orbitingAround = orbitingAround # A string that specifies about which the body of interest orbits 
+        self.centralObj = 0 # centralObj is the (programming level) object of the body about wich the body of interest orbits
+        # For maxima and minima separations:
+        self.orbitVec_History = np.array([0,0,0]) # Saves the position vectors of the central body, wrt to the central body
+        self.orbitSeparation = np.array([]) # Saves the magnitude of the separations between central bodies and orbital bodies
+        self.perhapsesIndex=[] # List that will contain on which (integer) time step the periapsides occour
+        self.apoapsisIndex=[] # List that will contain on which (integer) time step the apoapsides occour
+        # For periods:
+        self.periodTimes = [] # List that saves the times when the particle of interest compleded a full period.
+        self.periods = [] # List that stores the time of the periods for orbiting bodies
+        self.angle = 0.0 # Angular displacement of orbiting body, around central body, wrt the orbiting body's initial position. 
+        self.averagePeriod = 0.0 # A float that will hold the calculated mean period of the orbiting body.
         
 
 
@@ -251,11 +257,11 @@ class Celestial (object):
         for obj in Celestial.objReg:
             if obj.orbitingAround != 'NONE':
                 # Periapsis (Closest)
-                periapsisIndexTuple = argrelextrema(obj.orbitSeparation, np.less) # determine the mininimum separation 
-                obj.periapsisIndex = periapsisIndexTuple[0].tolist() # convert the tuple to a list
+                periapsisIndexTuple = argrelextrema(obj.orbitSeparation, np.less) # Find the (local) minima of the separations 
+                obj.periapsisIndex = periapsisIndexTuple[0].tolist() # Convert the array of the minima to a list
                 # Apoapsis (Furthest)
-                apoapsisIndexTuple = argrelextrema(obj.orbitSeparation, np.greater) # determine the maximum separation
-                obj.apoapsisIndex = apoapsisIndexTuple[0].tolist()
+                apoapsisIndexTuple = argrelextrema(obj.orbitSeparation, np.greater) # determine the (local) maximum separations
+                obj.apoapsisIndex = apoapsisIndexTuple[0].tolist() # Convert the array of the minima to a list
 
     # Determines times at which one full period is made and stores them in the list.
     @staticmethod   
