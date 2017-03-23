@@ -41,18 +41,6 @@ class Celestial (object):
     # Initialise a class level list for all existing Celestial instances
     objReg=[]
 
-    # Arguments / Properties for _init_():
-    # ----------------
-    # P3D: Particle3D instance associated with appropriate Celestial instance
-    # force_History: initially a 1x3 array. Will become an Nx3 array, 0 < N ; Note: MUST be an array NOT a list
-    # orbitingAround: A string that specifies about which the body of interest orbits.
-        # If there is no particle about which the body of interest orbits then the value "NONE" should be given
-    # orbitVec_History: initially a 1x3 array. Will become an Nx3 array, 0 < N ; Note MUST be an array NOT a list
-    # angle: gives the angular displacement of the orbiting body wrt the body it is orbiting around and initial position
-        # If there is no particle about which the body of interest orbits then this variable will be wrt the COM.
-
-    # More arguments and properties can easily be added
-
     def __init__(self, P3D, orbitingAround):
         # Register the instance in the Celestial Registrar
         Celestial.objReg.append(self)
