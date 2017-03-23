@@ -152,12 +152,12 @@ timeArray=np.arange(0, tTotal + dt, dt) # returns an array of evenly spaced time
 for t in timeArray:
     # Data
     # ---------------
-    CEL.globalPositionPrint_XYZ(trajectory_File_Handle, t) # 
-    potentialEnergyList.append( CEL.totalPotentialEnergy(G))
-    kineticEnergyList.append( CEL.totalKineticEnergy())
-    energyList.append( potentialEnergyList[-1] + kineticEnergyList[-1])
-    CEL.globalOrbitPosVecUpdate()
-    CEL.globalOrbitSeparationUpdate()
+    CEL.globalPositionPrint_XYZ(trajectory_File_Handle, t) # Writes positions of all objects to the trajectory output file for VMD visualization
+    potentialEnergyList.append( CEL.totalPotentialEnergy(G)) # Appends the total potential energy of the system at time t to the list.
+    kineticEnergyList.append( CEL.totalKineticEnergy()) # Appends the total kinetic energy of the system at time t to the list.
+    energyList.append( potentialEnergyList[-1] + kineticEnergyList[-1]) # Appends the total energy of the system at time t to the list.
+    CEL.globalOrbitPosVecUpdate() # Updates the position vectors of all bodies wrt to the central body each of them orbits
+    CEL.globalOrbitSeparationUpdate() # Updates the magnitudes of position vectors of all bodies wrt to the central body each of them orbits
 
     # Dynamics
     # ---------------
