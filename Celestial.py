@@ -59,11 +59,19 @@ class Celestial (object):
         self.orbitSeparation = np.array([]) # Saves the magnitude of the separations between central bodies and orbital bodies
         self.perhapsesIndex=[] # List that will contain on which (integer) time step the periapsides occour
         self.apoapsisIndex=[] # List that will contain on which (integer) time step the apoapsides occour
+	self.periapsis=[]
+	self.apoapsis=[]
+	self.averagePeriapsis=0.0
+	self.averageApoapsis=0.0
+	self.averageEccentricity=0.0
+	self.keplerCheck=[]
+	self.smAxisCubed=0.0
         # For periods:
         self.periodTimes = [] # List that saves the times when the particle of interest compleded a full period.
         self.periods = [] # List that stores the time of the periods for orbiting bodies
         self.angle = 0.0 # Angular displacement of orbiting body, around central body, wrt the orbiting body's initial position. 
         self.averagePeriod = 0.0 # A float that will hold the calculated mean period of the orbiting body.
+	
         
 
 

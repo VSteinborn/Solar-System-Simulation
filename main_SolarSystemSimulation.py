@@ -67,27 +67,30 @@ def metersToAU(m): return (m / Meters_In_AU)
 def kilogramsToEarthMass(kg): return (kg / Kilograms_In_EarthMass)
 def simulationEnergyToGJ(energy): return  energy * Kilograms_In_EarthMass* Meters_In_AU**2 / (Seconds_In_Day**2)*1.0e-9
 def daysToYears(days): return days * Seconds_In_Day / Seconds_In_Year
+def yearstoDays(years): return years * Seconds_In_Year / Seconds_In_Day
 
 # User Input and Program Execution
 # ---------------
 
 # Read name of 4 output files from command line: trajectory, energy, extrema and periods
-if len(sys.argv) != 5:
+if len(sys.argv) != 6:
     print    "Wrong number of arguments."
     print    "Usage: " + sys.argv[
-        0] + " <trajectory output file>" + " <extrema output file>" + " <periods output file>"+ " <energy output file>"
+        0] + " <trajectory output file>" + " <extrema output file>" + " <periods output file>"+ " <energy output file>" + " <average parameters>"
     quit()
 else:
     trajectory_File_Name = sys.argv[1]
     periAndApo_File_Name = sys.argv[2]
     periods_File_Name = sys.argv[3]
     energy_File_Name = sys.argv[4]
+    averageParameters = sys.argv[5]
     
 # Open output file for writing
 trajectory_File_Handle = open(trajectory_File_Name, "w")
 periAndApo_File_Handle = open(periAndApo_File_Name, "w")
 periods_File_Handle = open(periods_File_Name, "w")
 energy_File_Handle = open(energy_File_Name, "w")
+averageParameters_File_Handle = open(averageParameters, "w")
 # Reading Input Files and Initializing Celestial bodies
 # ---------------
 
@@ -173,6 +176,8 @@ for t in timeArray:
 energyInGJList = [simulationEnergyToGJ(x) for x in energyList]
 keInGJList = [simulationEnergyToGJ(x) for x in kineticEnergyList]
 peInGJList = [simulationEnergyToGJ(x) for x in potentialEnergyList]
+smAxisCubedList = []
+periodSquaredList =[]
 # Convert Times to (Julian) Years
 timeInYears = [daysToYears(t) for t in np.arange(0, tTotal +dt , dt)]
 
@@ -197,31 +202,65 @@ for obj in CEL.objReg:
         periAndApo_File_Handle.write("Periapsis Times (days): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
         for i in obj.periapsisIndex:
+	    obj.periapsis = np.append( obj.periapsis, obj.orbitSeparation[i])
             periAndApo_File_Handle.write(str(timeArray[i]) + " " +str(obj.orbitSeparation[i])+ "\n")
         periAndApo_File_Handle.write('\n')
+	if len(obj.periapsis) !=0 :
+	    obj.averagePeriapsis=np.mean(obj.periapsis)
 
         # Write the the values of apoapsides into the extrema output file.
         periAndApo_File_Handle.write("Apoapsis Times (days): " + obj.P3D.label)
         periAndApo_File_Handle.write('\n')
         for i in obj.apoapsisIndex:
+	    obj.apoapsis = np.append( obj.apoapsis, obj.orbitSeparation[i])
             periAndApo_File_Handle.write(str(timeArray[i]) +" "+ str(obj.orbitSeparation[i]) + "\n")
         periAndApo_File_Handle.write('\n')
+	if len(obj.apoapsis) !=0 :
+	    obj.averageApoapsis=np.mean(obj.apoapsis)
+	
         
         # Write the values of periods for each body and their average to the periods output file.
-        periods_File_Handle.write("Periods (days): " + obj.P3D.label)
+        periods_File_Handle.write("Periods (years): " + obj.P3D.label)
         periods_File_Handle.write('\n')
         if len(obj.periods) !=0 :
             for i in obj.periods:
-                periods_File_Handle.write(str(i)  + "\n")
-            periods_File_Handle.write("The average period is " + str(obj.averagePeriod)+ "\n")
+            	periods_File_Handle.write(str(yearstoDays(i))  + "\n")
+            periods_File_Handle.write("The average period is " + str(yearstoDays(obj.averagePeriod))+ "\n")
             periods_File_Handle.write("Since the last completed period the object  went through the additional angle of " + str(obj.angle)+ " radians" + "\n")
             periods_File_Handle.write('\n')
         else:
             periods_File_Handle.write("The object did not complete the full period and it went through the angle of " + str(obj.angle)+ " radians" + "\n")
             periods_File_Handle.write('\n')
+	# Calculate eccentricities
+	if obj.averageApoapsis+obj.averagePeriapsis !=0 :
+	    obj.averageEccentricity=(obj.averageApoapsis-obj.averagePeriapsis)/(obj.averageApoapsis+obj.averagePeriapsis)
+        #keplerCheck=(obj.averagePeriod)**2/(0.5*(obj.averageApoapsis+obj.averagePeriapsis))**3
+	obj.smAxisCubed=(0.5*(obj.averageApoapsis+obj.averagePeriapsis))**3
+	smAxisCubedList.append(obj.smAxisCubed)
+	periodSquaredList.append((obj.averagePeriod)**2)
+	#obj.keplerCheck = np.append( obj.keplerCheck, keplerCheck)
+	# Check Kepler's 3rd law
+	#realConst= 4*math.pi**2/(G*(obj.P3D.mass+Sun.P3D.mass))
+	#approxConst= 4*math.pi**2/(G*Sun.P3D.mass)
+	
         
+
+	# Write the values of average parameters
+        averageParameters_File_Handle.write("Periods (years),apoapsis,periapsis,eccentricity: " + obj.P3D.label)
+        averageParameters_File_Handle.write('\n')
+        averageParameters_File_Handle.write(str(daysToYears(obj.averagePeriod))  + "\n")
+  	averageParameters_File_Handle.write(str(obj.averageApoapsis)  + "\n")
+	averageParameters_File_Handle.write(str(obj.averagePeriapsis)  + "\n")
+	averageParameters_File_Handle.write(str(obj.averageEccentricity)  + "\n")
+    
+	        
         pyplot.figure()
 
+# Plot period squared vs semi-major axis cubed to check kelper 3
+pyplot.plot(smAxisCubedList, periodSquaredList)
+pyplot.title("Average period squared against semi-major axis cubed")
+pyplot.xlabel("Time (Years)")
+pyplot.ylabel("Distance (AU)")
 
 # Plot energies (KE,PE and total) of the system (in SI units)
 pyplot.plot(timeInYears, energyInGJList)
