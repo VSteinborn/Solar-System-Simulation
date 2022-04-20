@@ -3,10 +3,6 @@ Solar System Simulation
 ////////////////////////
 
 By: Tomasz Andrzejewski and Victor Steinborn
-Matriculation numbers:
-Victor Steinborn: ***REMOVED***
-Tomasz Andrzejewski: ***REMOVED***
-
 
 JH Computer Modeling
 *****************

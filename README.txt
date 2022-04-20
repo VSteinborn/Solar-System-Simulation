@@ -6,10 +6,6 @@ Only gravitational interactions are considered between the simulated particles o
 
 By: Tomasz Andrzejewski and Victor Steinborn
 
-Matriculation Numbers:
-Victor Steinborn: ***REMOVED***
-Tomasz Andrzejewski: ***REMOVED***
-
 How to execute the program:
 ////////////////////
 To execute the program, type in terminal:
